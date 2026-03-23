@@ -1,0 +1,16 @@
+[Unit]
+Description=Audio sanity (force PipeWire, block PulseAudio)
+After=default.target
+Wants=pipewire.socket pipewire-pulse.socket wireplumber.service
+
+[Service]
+Type=oneshot
+# niech nawet jak coś nie istnieje, to się nie wywali
+ExecStart=-/usr/bin/systemctl --user mask pulseaudio.service pulseaudio.socket
+ExecStart=-/usr/bin/systemctl --user stop pulseaudio.service pulseaudio.socket
+# daj udevowi chwilę na sprzęt audio (to często rozwiązuje "Dummy Output" po boot)
+ExecStart=/usr/bin/sleep 1
+ExecStart=/usr/bin/systemctl --user restart wireplumber pipewire pipewire-pulse
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,19 @@
+[[plugin.deps]]
+use = "yazi-rs/flavors:neon"
+rev = "3001521"
+hash = "99aa06d3014798d86001c324468d497f"
+
+[[plugin.deps]]
+use = "yazi-rs/flavors:tokyo-night"
+rev = "3001521"
+hash = "99aa06d3014798d86001c324468d497f"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:dracula"
+rev = "3001521"
+hash = "8589ae0231756a9daf9c072f31b1fe0"
+
+[[flavor.deps]]
+use = "BennyOe/tokyo-night"
+rev = "8e6296f"
+hash = "d9da921c3bd37ba32ee27a8a7a40461f"

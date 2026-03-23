@@ -1,0 +1,32 @@
+.modules-left {
+  background: alpha(@panel, 0.78);
+  border-radius: 16px;
+  padding: 0 10px;
+  margin: 6px 10px 0 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+
+#hyprland-workspaces button {
+  padding: 0 14px;
+  margin: 6px 4px;
+  border-radius: 10px;
+  background: alpha(@panel_alt, 0.40);
+  color: @accent2;
+  font-size: 1.4em;
+  transition: all 0.18s ease;
+}
+
+#hyprland-workspaces button:hover {
+  background: alpha(@panel_alt, 0.70);
+  color: @text_bright;
+}
+
+#hyprland-workspaces button.active {
+  background: linear-gradient(135deg, @accent2, @accent);
+  color: @bg;
+  box-shadow: 0 0 18px alpha(@accent, 0.55);
+}
+
+#tray {
+  padding: 0 8px;
+}

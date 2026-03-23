@@ -1,0 +1,52 @@
+.modules-right {
+  background: alpha(@panel, 0.78);
+  border-radius: 16px;
+  padding: 0 12px;
+  margin: 6px 18px 0 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+
+#pulseaudio,
+#custom-sysinfo {
+  padding: 0 10px;
+  color: @accent;
+}
+
+#pulseaudio.muted {
+  color: @accent2;
+}
+
+#network {
+  padding: 0 10px;
+  color: @cyan;
+}
+
+#custom-power {
+  padding: 0 14px;
+  color: @accent;
+  font-size: 1.35em;
+  transition: all 0.2s ease;
+}
+
+#custom-power:hover {
+  color: #ffffff;
+}
+
+#custom-brightness {
+  padding: 0 10px;
+  color: #ffcc80;
+}
+
+#custom-brightness:hover {
+  color: #ffffff;
+}
+
+#custom-sysinfo {
+  padding: 0 10px;
+  color: #ffcc80;
+  font-weight: 600;
+}
+
+#custom-sysinfo:hover {
+  color: #ffffff;
+}

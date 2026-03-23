@@ -1,0 +1,21 @@
+[general]
+framerate = 120
+autosens = 1
+sensitivity = 100
+
+[output]
+method = ncurses
+
+[color]
+# ciepły gradient jak płomień: rdzawy -> pomarańcz -> złoto
+gradient = 1
+gradient_count = 8
+
+gradient_color_1 = '#6b2321'
+gradient_color_2 = '#9e3b2d'
+gradient_color_3 = '#df5232'
+gradient_color_4 = '#f07a3a'
+gradient_color_5 = '#f2a15d'
+gradient_color_6 = '#e3b572'
+gradient_color_7 = '#ffd090'
+gradient_color_8 = '#f4eee6'

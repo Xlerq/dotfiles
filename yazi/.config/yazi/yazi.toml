@@ -1,0 +1,20 @@
+[opener]
+edit = [
+  { run = "helix %s", block = true, for = "linux", desc = "Edit in Helix" },
+]
+
+[open]
+prepend_rules = [
+  # ogólnie tekst
+  { mime = "text/*", use = "edit" },
+
+  # rzeczy, które czasem nie wpadają jako text/*
+  { url = "*.rs",   use = "edit" },
+  { url = "*.toml", use = "edit" },
+  { url = "*.json", use = "edit" },
+  { url = "*.yml",  use = "edit" },
+  { url = "*.yaml", use = "edit" },
+  { url = "*.conf", use = "edit" },
+  { url = "*.ini",  use = "edit" },
+  { url = "*.sh",   use = "edit" },
+]

@@ -1,0 +1,19 @@
+
+.modules-center {
+  background: alpha(@panel, 0.78);
+  border-radius: 16px;
+  padding: 6px 22px;
+  margin: 6px 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+
+#custom-center {
+  font-size: 1.18em;
+  font-weight: 700;
+  color: @accent;
+  padding: 0 8px;
+}
+
+#custom-center:hover {
+  color: @text_bright;
+}

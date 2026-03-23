@@ -1,0 +1,15 @@
+selected_tab: thermals_page
+selected_gpu: 1002:67DF-1DA2:E353-0000:01:00.0
+plots_time_period: 60
+plots_per_row: 2
+stats_poll_interval_ms: 500
+gpus:
+  1002:67DF-1DA2:E353-0000:01:00.0:
+    plots:
+    - - !Temperature edge
+    - - GpuClock
+      - VramClock
+    - - FanRpm
+      - FanPwm
+    - - PowerCurrent
+      - PowerCap

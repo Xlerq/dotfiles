@@ -1,0 +1,155 @@
+
+@define-color bg #080b0f;
+@define-color panel #151c29;
+@define-color panel_alt #1a2232;
+
+@define-color text #d8d0c8;
+@define-color text_bright #f4eee6;
+
+@define-color accent #e3b572;
+@define-color accent2 #8d7147;
+
+@define-color cyan #4c7a8a;
+
+
+window#waybar {
+  /* to jest właściwe “przezroczyste” w GTK */
+  background-color: rgba(0, 0, 0, 0);
+  background-image: none;
+  box-shadow: none;
+
+  margin-top: 6px;
+}
+
+window#waybar > box {
+  /* tu często siedzi białe tło */
+  background-color: rgba(0, 0, 0, 0);
+  background-image: none;
+}
+* {
+  border: none;
+  border-radius: 0;
+  font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free", sans-serif;
+  font-size: 13px;
+  min-height: 0;
+  color: @text;
+}
+
+tooltip {
+  background: alpha(@bg, 0.96);
+  border: 2px solid @accent;
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: @text_bright;
+  font-family: monospace;
+  font-size: 13.5px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+tooltip .highlight {
+  color: @accent;
+  font-weight: bold;
+}
+.modules-left {
+  background: alpha(@panel, 0.78);
+  border-radius: 16px;
+  padding: 0 10px;
+  margin: 6px 10px 0 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+
+#hyprland-workspaces button {
+  padding: 0 14px;
+  margin: 6px 4px;
+  border-radius: 10px;
+  background: alpha(@panel_alt, 0.40);
+  color: @accent2;
+  font-size: 1.4em;
+  transition: all 0.18s ease;
+}
+
+#hyprland-workspaces button:hover {
+  background: alpha(@panel_alt, 0.70);
+  color: @text_bright;
+}
+
+#hyprland-workspaces button.active {
+  background: linear-gradient(135deg, @accent2, @accent);
+  color: @bg;
+  box-shadow: 0 0 18px alpha(@accent, 0.55);
+}
+
+#tray {
+  padding: 0 8px;
+}
+
+.modules-center {
+  background: alpha(@panel, 0.78);
+  border-radius: 16px;
+  padding: 6px 22px;
+  margin: 6px 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+
+#custom-center {
+  font-size: 1.18em;
+  font-weight: 700;
+  color: @accent;
+  padding: 0 8px;
+}
+
+#custom-center:hover {
+  color: @text_bright;
+}
+.modules-right {
+  background: alpha(@panel, 0.78);
+  border-radius: 16px;
+  padding: 0 12px;
+  margin: 6px 18px 0 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+
+#pulseaudio,
+#custom-sysinfo {
+  padding: 0 10px;
+  color: @accent;
+}
+
+#pulseaudio.muted {
+  color: @accent2;
+}
+
+#network {
+  padding: 0 10px;
+  color: @cyan;
+}
+
+#custom-power {
+  padding: 0 14px;
+  color: @accent;
+  font-size: 1.35em;
+  transition: all 0.2s ease;
+}
+
+#custom-power:hover {
+  color: #ffffff;
+}
+
+#custom-brightness {
+  padding: 0 10px;
+  color: #ffcc80;
+}
+
+#custom-brightness:hover {
+  color: #ffffff;
+}
+
+#custom-sysinfo {
+  padding: 0 10px;
+  color: #ffcc80;
+  font-weight: 600;
+}
+
+#custom-sysinfo:hover {
+  color: #ffffff;
+}

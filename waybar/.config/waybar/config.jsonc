@@ -1,0 +1,88 @@
+{
+  "modules-left": [
+    "hyprland/workspaces",
+    "tray"
+  ],
+  "modules-center": [
+    "custom/center"
+  ],
+  "modules-right": [
+    "custom/brightness",
+    "pulseaudio",
+    "custom/sysinfo",
+    "network",
+    "custom/power"
+  ],
+  // ── LEWA – 5 workspace'ów
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "on-click": "activate",
+    "sort-by-number": true,
+    "persistent-workspaces": {
+      "*": 5
+    },
+    "format-icons": {
+      "active": "●",
+      "default": "○"
+    }
+  },
+  "tray": {
+    "spacing": 8,
+    "icon-size": 18
+  },
+  // ── ŚRODEK – godzina + muzyka
+  "custom/center": {
+    "exec": "~/.config/waybar/center.sh",
+    "return-type": "json",
+    "interval": 1,
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "~/.config/waybar/toggle-calendar.sh"
+  },
+  // ── PRAWA – wifi + tray + power
+  "network": {
+    "format-wifi": "󰤨 {essid}",
+    "format-disconnected": "󰤭 Brak",
+    "tooltip-format": "{ifname} via {gwaddr}\n{ipaddr}",
+    "tooltip": true
+  },
+  "custom/power": {
+    "format": "⏻",
+    "tooltip": false,
+    "on-click": "wlogout -b 2 -c 10 -r 10 -L 780 -R 780 -T 280 -B 280 -n -P 0"
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰝟 mute",
+    "format-icons": {
+      "default": [
+        "󰕿",
+        "󰖀",
+        "󰕾"
+      ],
+      "headphones": "󰋋",
+      "headset": "󰋎"
+    },
+    "scroll-step": 5,
+    "on-click": "sh -lc 'command -v pwvucontrol >/dev/null && pwvucontrol || pavucontrol'",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+  },
+  "custom/sysinfo": {
+    "exec": "~/.config/waybar/sysinfo.sh",
+    "return-type": "json",
+    "interval": 3,
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "foot -e btop"
+  },
+  "custom/brightness": {
+    "exec": "~/.config/waybar/monitor-brightness.sh",
+    "return-type": "json",
+    "interval": 5,
+    "format": "{}",
+    "tooltip": true,
+    "on-scroll-up": "~/.config/waybar/monitor-brightness.sh up",
+    "on-scroll-down": "~/.config/waybar/monitor-brightness.sh down",
+    "on-click": "~/.config/waybar/monitor-brightness.sh"
+  }
+}

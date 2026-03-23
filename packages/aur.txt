@@ -1,0 +1,15 @@
+brave-bin
+debtap
+joplin-bin
+paru
+paru-debug
+plymouth-theme-cuts-alt-git
+prismlauncher-offline-bin
+protonup-qt-bin
+spotatui-bin
+spotify
+tradingview
+ventoy-bin
+waybar-mpris-git
+wlogout
+zen-browser-bin

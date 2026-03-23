@@ -1,0 +1,52 @@
+
+@define-color bg #080b0f;
+@define-color panel #151c29;
+@define-color panel_alt #1a2232;
+
+@define-color text #d8d0c8;
+@define-color text_bright #f4eee6;
+
+@define-color accent #e3b572;
+@define-color accent2 #8d7147;
+
+@define-color cyan #4c7a8a;
+
+
+window#waybar {
+  /* to jest właściwe “przezroczyste” w GTK */
+  background-color: rgba(0, 0, 0, 0);
+  background-image: none;
+  box-shadow: none;
+
+  margin-top: 6px;
+}
+
+window#waybar > box {
+  /* tu często siedzi białe tło */
+  background-color: rgba(0, 0, 0, 0);
+  background-image: none;
+}
+* {
+  border: none;
+  border-radius: 0;
+  font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free", sans-serif;
+  font-size: 13px;
+  min-height: 0;
+  color: @text;
+}
+
+tooltip {
+  background: alpha(@bg, 0.96);
+  border: 2px solid @accent;
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: @text_bright;
+  font-family: monospace;
+  font-size: 13.5px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+tooltip .highlight {
+  color: @accent;
+  font-weight: bold;
+}

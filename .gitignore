@@ -1,0 +1,74 @@
+# local overrides
+*.local
+**/*.local
+
+# secrets / private
+.env
+.env.*
+*.secret
+*.key
+*.pem
+*.crt
+*.p12
+
+# ssh / gnupg / credentials
+.ssh/
+.gnupg/
+
+# generic junk
+*~
+*.swp
+*.swo
+.DS_Store
+
+# logs / caches / runtime
+.cache/
+**/cache/
+**/tmp/
+**/logs/
+**/*.log
+**/log.txt
+**/GPUCache/
+**/Session Storage/
+**/Local Storage/
+**/blob_storage/
+**/IndexedDB/
+**/Code Cache/
+**/DawnGraphiteCache/
+**/DawnWebGPUCache/
+
+# sqlite / databases
+**/*.sqlite
+**/*.sqlite-journal
+
+# tokens / cookies
+**/*token*
+**/*secret*
+**/cookie
+**/Cookies
+**/Cookies-journal
+
+# Joplin and app data
+.config/Joplin/
+.config/joplin-desktop/
+
+# pulse / telemetry / dconf runtime
+.config/pulse/
+.config/go/telemetry/
+.config/dconf/user
+
+# micro junk
+.config/micro/backups/
+.config/micro/buffers/
+
+# spotatui private files
+spotatui/.config/spotatui/client.yml
+spotatui/.config/spotatui/.spotify_token_cache*.json
+spotatui/.config/spotatui/streaming_cache/
+
+# nested repos
+**/.git
+**/.git/**
+
+# screenshots temp
+assets/screenshots/raw/
