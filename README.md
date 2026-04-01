@@ -10,7 +10,6 @@ This repository contains my user configs, scripts, package lists, wallpaper, and
 ![Hyprland desktop 1](assets/screenshots/hypr1.png)
 ![Hyprland desktop 2](assets/screenshots/hypr2.png)
 ![Hyprland desktop 3](assets/screenshots/hypr3.png)
-![Hyprland desktop 4](assets/screenshots/hypr4.png)
 
 ## Included
 
