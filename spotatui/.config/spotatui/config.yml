@@ -46,7 +46,7 @@ behavior:
   announcement_feed_url: null
   seen_announcement_ids:
   - 2026-02-27-major-refactor-complete
-  shuffle_enabled: true
+  shuffle_enabled: false
   liked_icon: ♥
   shuffle_icon: 🔀
   repeat_track_icon: 🔂
@@ -54,7 +54,7 @@ behavior:
   playing_icon: ▶
   paused_icon: ⏸
   set_window_title: true
-  visualizer_style: BarGraph
+  visualizer_style: Equalizer
   dismissed_announcements: []
   relay_server_url: wss://spotatui-party.spotatui.workers.dev/ws
   stop_after_current_track: false

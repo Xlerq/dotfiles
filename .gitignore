@@ -60,11 +60,23 @@
 # micro junk
 .config/micro/backups/
 .config/micro/buffers/
+micro/.config/micro/buffers/
 
 # spotatui private files
 spotatui/.config/spotatui/client.yml
 spotatui/.config/spotatui/.spotify_token_cache*.json
 spotatui/.config/spotatui/streaming_cache/
+spotatui/.config/spotatui/.gitignore
+
+# codex / local editor backups
+foot/.config/foot/*.bak.codex-*
+
+# user systemd runtime symlinks and masks
+systemd-user/.config/systemd/user/*.wants/
+systemd-user/.config/systemd/user/pipewire-media-session.service
+systemd-user/.config/systemd/user/pipewire-session-manager.service
+systemd-user/.config/systemd/user/pulseaudio.service
+systemd-user/.config/systemd/user/pulseaudio.socket
 
 # nested repos
 **/.git
