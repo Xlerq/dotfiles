@@ -5,6 +5,7 @@ base
 base-devel
 bash-language-server
 bind
+brightnessctl
 btop
 calc
 cantarell-fonts
@@ -42,7 +43,6 @@ hyprpicker
 hyprpolkitagent
 hyprshot
 imagemagick
-intel-ucode
 iwd
 kolourpaint
 lact
@@ -52,6 +52,7 @@ libpulse
 linux
 linux-firmware
 lldb
+lm_sensors
 man-db
 micro
 nmap
@@ -60,6 +61,7 @@ os-prober
 otf-font-awesome
 papirus-icon-theme
 pavucontrol
+playerctl
 pipewire
 pipewire-alsa
 pipewire-jack
@@ -97,15 +99,12 @@ ttf-jetbrains-mono-nerd
 ueberzugpp
 uwsm
 vscode-json-languageserver
-vulkan-radeon
 waybar
 wget
 wireless_tools
 wireplumber
 xdg-desktop-portal-hyprland
 xdg-utils
-xf86-video-amdgpu
-xf86-video-ati
 xorg-server
 xorg-xinit
 yaml-language-server
