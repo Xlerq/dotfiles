@@ -1,15 +1,15 @@
 
-@define-color bg #080b0f;
-@define-color panel #151c29;
-@define-color panel_alt #1a2232;
+@define-color bg #0f0b0c;
+@define-color panel #191314;
+@define-color panel_alt #221416;
 
 @define-color text #d8d0c8;
 @define-color text_bright #f4eee6;
 
-@define-color accent #e3b572;
-@define-color accent2 #8d7147;
+@define-color accent #f2a15d;
+@define-color accent2 #c44f3b;
 
-@define-color cyan #4c7a8a;
+@define-color cyan #e98c6e;
 
 
 window#waybar {

@@ -15,13 +15,13 @@ This repository contains my user configs, scripts, package lists, and selected s
 - Hyprland
 - Waybar
 - Foot
+- Fastfetch
 - Yazi
 - Helix
 - Cava
 - Wlogout
 - Zathura
 - Btop
-- Neofetch
 - Rustfmt
 - Bash aliases and shell config
 - User systemd services
@@ -29,3 +29,10 @@ This repository contains my user configs, scripts, package lists, and selected s
 - GRUB config
 - package lists
 
+## Sync
+
+To refresh the tracked configs from the current machine state, run:
+
+```bash
+./scripts/sync-home.sh
+```

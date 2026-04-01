@@ -1,0 +1,121 @@
+# vim:fileencoding=utf-8:foldmethod=marker
+
+[mgr]
+cwd = { fg = "#f2a15d", bold = true }
+hovered = { fg = "#f4eee6", bg = "#221416", bold = true }
+preview_hovered = { fg = "#f2a15d", underline = true }
+
+find_keyword = { fg = "#f2a15d", bg = "#5c1b1b", bold = true, underline = true }
+find_position = { fg = "#f4eee6", bg = "reset", bold = true }
+
+marker_copied   = { fg = "#e3b572", bg = "#e3b572" }
+marker_cut      = { fg = "#c44f3b", bg = "#c44f3b" }
+marker_marked   = { fg = "#f2a15d", bg = "#e98c6e" }
+marker_selected = { fg = "#f2a15d", bg = "#f2a15d" }
+
+count_copied   = { fg = "#0b0708", bg = "#e3b572" }
+count_cut      = { fg = "#0b0708", bg = "#c44f3b" }
+count_selected = { fg = "#0b0708", bg = "#f2a15d" }
+
+border_symbol = "│"
+border_style  = { fg = "#3c2725" }
+
+[tabs]
+active   = { fg = "#0b0708", bg = "#f2a15d", bold = true }
+inactive = { fg = "#d8d0c8", bg = "#191314" }
+
+[mode]
+normal_main = { fg = "#0b0708", bg = "#c44f3b", bold = true }
+normal_alt  = { fg = "#f4eee6", bg = "#191314" }
+
+select_main = { fg = "#0b0708", bg = "#f2a15d", bold = true }
+select_alt  = { fg = "#f4eee6", bg = "#191314" }
+
+unset_main = { fg = "#0b0708", bg = "#e98c6e", bold = true }
+unset_alt  = { fg = "#f4eee6", bg = "#191314" }
+
+[status]
+overall = { fg = "#f2a15d" }
+sep_left  = { open = "", close = "" }
+sep_right = { open = "", close = "" }
+
+progress_label  = { fg = "#0b0708", bold = true }
+progress_normal = { fg = "#f2a15d", bg = "#191314" }
+progress_error  = { fg = "#c44f3b", bg = "#191314" }
+
+perm_sep   = { fg = "#f2a15d" }
+perm_type  = { fg = "#e3b572" }
+perm_read  = { fg = "#f2a15d" }
+perm_write = { fg = "#c44f3b" }
+perm_exec  = { fg = "#e98c6e" }
+
+[pick]
+border   = { fg = "#c44f3b" }
+active   = { fg = "#f2a15d", bold = true }
+inactive = {}
+
+[input]
+border   = { fg = "#c44f3b" }
+title    = { fg = "#f2a15d" }
+value    = {}
+selected = { reversed = true }
+
+[cmp]
+border = { fg = "#c44f3b" }
+
+[tasks]
+border  = { fg = "#c44f3b" }
+title   = { fg = "#f2a15d" }
+hovered = { fg = "#f2a15d", underline = true }
+
+[which]
+mask            = { bg = "#191314" }
+cand            = { fg = "#f2a15d" }
+rest            = { fg = "#d8d0c8" }
+desc            = { fg = "#e98c6e" }
+separator       = " -> "
+separator_style = { fg = "#6d4a43" }
+
+[help]
+on      = { fg = "#e3b572" }
+run     = { fg = "#e98c6e" }
+hovered = { reversed = true, bold = true }
+footer  = { fg = "#0b0708", bg = "#d8d0c8" }
+
+[spot]
+border   = { fg = "#c44f3b" }
+title    = { fg = "#f2a15d" }
+tbl_col  = { fg = "#e3b572" }
+tbl_cell = { fg = "#f4eee6", bg = "#191314" }
+
+[notify]
+title_info  = { fg = "#e3b572" }
+title_warn  = { fg = "#f2a15d" }
+title_error = { fg = "#c44f3b" }
+
+[filetype]
+rules = [
+  { mime = "image/*", fg = "#e98c6e" },
+  { mime = "video/*", fg = "#c44f3b" },
+  { mime = "audio/*", fg = "#c44f3b" },
+
+  { mime = "application/zip",             fg = "#f2a15d" },
+  { mime = "application/x-tar",           fg = "#f2a15d" },
+  { mime = "application/x-bzip*",         fg = "#f2a15d" },
+  { mime = "application/x-bzip2",         fg = "#f2a15d" },
+  { mime = "application/x-7z-compressed", fg = "#f2a15d" },
+  { mime = "application/x-rar",           fg = "#f2a15d" },
+  { mime = "application/x-xz",            fg = "#f2a15d" },
+
+  { mime = "application/doc",      fg = "#e3b572" },
+  { mime = "application/epub+zip", fg = "#e3b572" },
+  { mime = "application/pdf",      fg = "#e3b572" },
+  { mime = "application/rtf",      fg = "#e3b572" },
+  { mime = "application/vnd.*",    fg = "#e3b572" },
+
+  { mime = "*", is = "orphan", fg = "#f4eee6", bg = "#982922" },
+  { mime = "application/*exec*", fg = "#c44f3b" },
+
+  { url = "*", fg = "#d8d0c8" },
+  { url = "*/", fg = "#f2a15d" }
+]

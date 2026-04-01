@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>name</key>
+  <string>Ember Rice</string>
+  <key>settings</key>
+  <array>
+    <dict>
+      <key>settings</key>
+      <dict>
+        <key>background</key>
+        <string>#0b0708</string>
+        <key>foreground</key>
+        <string>#d8d0c8</string>
+        <key>caret</key>
+        <string>#f2a15d</string>
+        <key>selection</key>
+        <string>#221416</string>
+        <key>selectionBorder</key>
+        <string>#c44f3b</string>
+        <key>lineHighlight</key>
+        <string>#191314</string>
+        <key>invisibles</key>
+        <string>#6d4a43</string>
+        <key>gutterForeground</key>
+        <string>#6d4a43</string>
+        <key>findHighlight</key>
+        <string>#982922</string>
+        <key>findHighlightForeground</key>
+        <string>#f4eee6</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Comment</string>
+      <key>scope</key>
+      <string>comment, punctuation.definition.comment</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#6d4a43</string>
+        <key>fontStyle</key>
+        <string>italic</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Command and Function</string>
+      <key>scope</key>
+      <string>entity.name.function, support.function, support.function.builtin, variable.function, meta.function-call, meta.method-call, markup.inline.raw, markup.raw.inline, markup.raw.block, markup.raw</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#c44f3b</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Variable and Tag</string>
+      <key>scope</key>
+      <string>variable, variable.other, entity.name.tag, entity.other.attribute-name, entity.name.label, markup.list</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#df5232</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Constant and Number</string>
+      <key>scope</key>
+      <string>constant, constant.numeric, constant.language, constant.other, support.constant</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#e98c6e</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>String</string>
+      <key>scope</key>
+      <string>string, string.quoted, markup.inserted, markup.quote</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#e3b572</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Type and Keyword</string>
+      <key>scope</key>
+      <string>entity.name.type, entity.name.class, support.type, support.class, storage.type, keyword, storage, entity.name.namespace</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#f2a15d</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Escape and Support</string>
+      <key>scope</key>
+      <string>constant.character.escape, constant.other.symbol, support.other, meta.embedded, entity.name.section, markup.heading</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#f08e63</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Operator and Punctuation</string>
+      <key>scope</key>
+      <string>keyword.operator, punctuation, meta.braces, meta.delimiter</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#d8d0c8</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Invalid</string>
+      <key>scope</key>
+      <string>invalid</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#0b0708</string>
+        <key>background</key>
+        <string>#982922</string>
+      </dict>
+    </dict>
+  </array>
+</dict>
+</plist>

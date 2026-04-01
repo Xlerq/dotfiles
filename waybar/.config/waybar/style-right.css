@@ -29,24 +29,24 @@
 }
 
 #custom-power:hover {
-  color: #ffffff;
+  color: @text_bright;
 }
 
 #custom-brightness {
   padding: 0 10px;
-  color: #ffcc80;
+  color: @accent;
 }
 
 #custom-brightness:hover {
-  color: #ffffff;
+  color: @text_bright;
 }
 
 #custom-sysinfo {
   padding: 0 10px;
-  color: #ffcc80;
+  color: @accent;
   font-weight: 600;
 }
 
 #custom-sysinfo:hover {
-  color: #ffffff;
+  color: @text_bright;
 }
