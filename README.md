@@ -35,22 +35,6 @@ This repo tracks user dotfiles, split package lists, one optional `greetd` confi
 - Package lists
 - Wallpaper and helper scripts
 
-## What Is Not In The Repo
-
-- bootloader config
-- partitioning / disk setup
-- user creation
-- secrets, tokens, caches, or machine-specific runtime junk
-
-## Package Philosophy
-
-The package lists are split into two layers:
-
-- `bare minimum`: what I consider enough to boot into the Hyprland setup, get audio, notifications, terminal, Waybar, and the core user environment working
-- `nice-to-have extras`: apps, gaming tools, dev tooling, browsers, media tools, and other convenience packages
-
-The goal is that a fresh install can start from the minimum set and only add the extra layer if wanted.
-
 ## Quick Install
 
 If you want the simplest path on a fresh Arch install, use the installer script.
@@ -92,28 +76,6 @@ If you also want the tracked `greetd` config copied into `/etc`, use:
 ```
 
 That copies `system/` into `/` with `sudo`. Review those files before using it.
-
-## Manual Deploy
-
-If you do not want the full installer, you can deploy only the user dotfiles:
-
-```bash
-./scripts/deploy-home.sh --dry-run
-./scripts/deploy-home.sh
-```
-
-This script:
-
-- copies the tracked user config into `$HOME`
-- renders `@HOME@` placeholders in files that need your local home path
-- installs the wallpaper used by `hyprpaper`
-
-If `systemctl --user` is not available at install time, enable the user services later inside your user session:
-
-```bash
-systemctl --user enable --now audio-sanity.service
-systemctl --user enable --now hyprpolkitagent.service
-```
 
 ## Sync From Current Machine
 
