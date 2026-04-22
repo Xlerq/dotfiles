@@ -86,6 +86,7 @@ for package in \
   rustfmt \
   spotatui \
   systemd-user \
+  tradingview \
   waybar \
   wlogout \
   yazi \
@@ -103,6 +104,7 @@ else
   printf '\nDotfiles deployed into %s\n' "$HOME_DIR"
   printf 'Next steps:\n'
   printf '  1. Install packages from packages/official.txt and your CPU/GPU files.\n'
-  printf '  2. Rebuild waybar CSS with ~/.config/waybar/rebuild-style.sh if needed.\n'
-  printf '  3. Reload Hyprland or log in again.\n'
+  printf '  2. Enable the user services you want (for example: systemctl --user enable --now audio-sanity.service hyprpolkitagent.service).\n'
+  printf '  3. Rebuild waybar CSS with ~/.config/waybar/rebuild-style.sh if needed.\n'
+  printf '  4. Reload Hyprland or log in again.\n'
 fi

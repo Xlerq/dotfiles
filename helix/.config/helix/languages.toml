@@ -1,7 +1,8 @@
 [[language]]
 name = "rust"
 auto-format = true
-formatter = { command = "rustfmt", args = ["+nightly", "--emit", "stdout"] }
+comment-tokens = "//"
+formatter = { command = "rustfmt" }
 
 [language-server.rust-analyzer.config]
 check.command = "clippy"
