@@ -29,7 +29,6 @@ git
 github-cli
 greetd
 greetd-tuigreet
-grub
 gsimplecal
 gst-plugin-pipewire
 helix
@@ -71,6 +70,7 @@ poppler
 qt5-wayland
 qt6-wayland
 ripgrep
+rsync
 rust-analyzer
 rustup
 sddm

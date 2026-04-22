@@ -32,7 +32,6 @@ This repository contains my user configs, scripts, package lists, wallpaper, and
 - Bash aliases and shell config
 - User systemd services
 - greetd config
-- GRUB config
 - package lists
 - wallpaper and sync/deploy scripts
 
