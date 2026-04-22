@@ -93,36 +93,6 @@ If you also want the tracked `greetd` config copied into `/etc`, use:
 
 That copies `system/` into `/` with `sudo`. Review those files before using it.
 
-## What The Installer Does
-
-`scripts/install-arch.sh` does the following:
-
-1. Detects your CPU and GPU profile, unless you override it.
-2. Installs the bare minimum package set from:
-   - `packages/official-minimal.txt`
-   - `packages/aur-minimal.txt`
-3. Adds the optional extras layer when you pass `--with-extras`:
-   - `packages/official-extra.txt`
-   - `packages/aur-extra.txt`
-4. Adds hardware-specific packages from:
-   - `packages/cpu-intel.txt` or `packages/cpu-amd.txt`
-   - `packages/gpu-amd.txt` or `packages/gpu-nvidia.txt`
-5. Bootstraps `paru` if it is needed for selected AUR packages.
-6. Runs `scripts/deploy-home.sh` to copy tracked user dotfiles into `$HOME`.
-7. Optionally copies tracked system files from `system/` into `/`.
-8. Tries to enable:
-   - `audio-sanity.service`
-   - `hyprpolkitagent.service`
-
-For hybrid Intel + Nvidia systems, the installer automatically adds `vulkan-intel`.
-
-The config is intentionally tolerant of missing extras:
-
-- `spotatui` and `cava` only autostart if installed
-- the calendar button does nothing if `gsimplecal` is missing
-- the power button falls back gracefully if `wlogout` is missing
-- shell aliases only activate when tools like `lsd` or `micro` are installed
-
 ## Manual Deploy
 
 If you do not want the full installer, you can deploy only the user dotfiles:
