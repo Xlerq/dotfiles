@@ -3,13 +3,23 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-alias ls='lsd'
+if command -v lsd >/dev/null 2>&1; then
+  alias ls='lsd'
+fi
 alias grep='grep --color=auto'
-alias nano='micro'
-alias hx='helix'
 
-export EDITOR=helix
-export VISUAL=helix
+if command -v micro >/dev/null 2>&1; then
+  alias nano='micro'
+fi
+
+if command -v helix >/dev/null 2>&1; then
+  alias hx='helix'
+  export EDITOR=helix
+  export VISUAL=helix
+else
+  export EDITOR="${EDITOR:-vi}"
+  export VISUAL="${VISUAL:-vi}"
+fi
 
 __xler_startup_fetch() {
   [[ -t 1 ]] || return

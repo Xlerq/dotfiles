@@ -9,6 +9,7 @@ INSTALL_AUR=1
 DEPLOY_HOME=1
 APPLY_SYSTEM=0
 ENABLE_USER_SERVICES=1
+WITH_EXTRAS=0
 CPU_OVERRIDE=""
 GPU_OVERRIDE=""
 
@@ -21,6 +22,7 @@ Run it as your normal user, not as root.
 
 Options:
   --dry-run             Print the actions without changing the system.
+  --with-extras         Install nice-to-have packages in addition to the bare minimum.
   --cpu intel|amd|none  Override CPU package profile detection.
   --gpu amd|nvidia|none Override GPU package profile detection.
   --apply-system        Copy tracked files from system/ into / using sudo.
@@ -33,6 +35,7 @@ Options:
 Examples:
   ./scripts/install-arch.sh --dry-run
   ./scripts/install-arch.sh
+  ./scripts/install-arch.sh --with-extras
   ./scripts/install-arch.sh --cpu intel --gpu nvidia --apply-system
 EOF
 }
@@ -71,6 +74,9 @@ parse_args() {
     case "$1" in
       --dry-run)
         DRY_RUN=1
+        ;;
+      --with-extras)
+        WITH_EXTRAS=1
         ;;
       --cpu)
         shift
@@ -201,7 +207,11 @@ read_package_files() {
 
 build_official_package_list() {
   local files
-  files=("$REPO_ROOT/packages/official.txt")
+  files=("$REPO_ROOT/packages/official-minimal.txt")
+
+  if [ "$WITH_EXTRAS" -eq 1 ]; then
+    files+=("$REPO_ROOT/packages/official-extra.txt")
+  fi
 
   case "$CPU_PROFILE" in
     intel)
@@ -230,7 +240,14 @@ build_official_package_list() {
 }
 
 build_aur_package_list() {
-  read_package_files "$REPO_ROOT/packages/aur.txt" | awk '!seen[$0]++'
+  local files
+  files=("$REPO_ROOT/packages/aur-minimal.txt")
+
+  if [ "$WITH_EXTRAS" -eq 1 ]; then
+    files+=("$REPO_ROOT/packages/aur-extra.txt")
+  fi
+
+  read_package_files "${files[@]}" | awk '!seen[$0]++'
 }
 
 bootstrap_paru() {
@@ -363,6 +380,11 @@ enable_tracked_user_services() {
 }
 
 print_plan() {
+  if [ "$WITH_EXTRAS" -eq 1 ]; then
+    info "Package set: minimal + nice-to-have extras"
+  else
+    info "Package set: bare minimum only"
+  fi
   info "CPU profile: $CPU_PROFILE"
   info "GPU profile: $GPU_PROFILE"
   info "Official packages: ${#OFFICIAL_PACKAGES[@]}"

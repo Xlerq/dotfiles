@@ -49,7 +49,7 @@
   "custom/power": {
     "format": "⏻",
     "tooltip": false,
-    "on-click": "wlogout -b 2 -c 10 -r 10 -L 780 -R 780 -T 280 -B 280 -n -P 0"
+    "on-click": "sh -lc 'command -v wlogout >/dev/null 2>&1 && exec wlogout -b 2 -c 10 -r 10 -L 780 -R 780 -T 280 -B 280 -n -P 0; command -v hyprlock >/dev/null 2>&1 && exec hyprlock; hyprctl dispatch exit'"
   },
   "pulseaudio": {
     "format": "{icon} {volume}%",

@@ -2,7 +2,7 @@
 
 My personal Arch Linux + Hyprland setup.
 
-This repo tracks user dotfiles, package lists, one optional `greetd` config, wallpaper assets, and helper scripts for syncing and deployment.
+This repo tracks user dotfiles, split package lists, one optional `greetd` config, wallpaper assets, and helper scripts for syncing and deployment.
 
 ## Preview
 
@@ -42,6 +42,15 @@ This repo tracks user dotfiles, package lists, one optional `greetd` config, wal
 - user creation
 - secrets, tokens, caches, or machine-specific runtime junk
 
+## Package Philosophy
+
+The package lists are split into two layers:
+
+- `bare minimum`: what I consider enough to boot into the Hyprland setup, get audio, notifications, terminal, Waybar, and the core user environment working
+- `nice-to-have extras`: apps, gaming tools, dev tooling, browsers, media tools, and other convenience packages
+
+The goal is that a fresh install can start from the minimum set and only add the extra layer if wanted.
+
 ## Quick Install
 
 If you want the simplest path on a fresh Arch install, use the installer script.
@@ -57,8 +66,15 @@ Important notes:
 
 - Run the installer as your normal user, not as `root`.
 - The script is meant for Arch Linux.
-- By default it installs packages, deploys dotfiles into `$HOME`, and tries to enable the tracked user services.
+- By default it installs the bare minimum package set, deploys dotfiles into `$HOME`, and tries to enable the tracked user services.
 - It does not touch system files unless you explicitly pass `--apply-system`.
+- It does not install the nice-to-have extras unless you explicitly pass `--with-extras`.
+
+If you want the full setup, including browsers, gaming tools, media tools, and dev extras:
+
+```bash
+./scripts/install-arch.sh --with-extras
+```
 
 If auto-detection guesses the wrong hardware profile, override it explicitly:
 
@@ -66,6 +82,7 @@ If auto-detection guesses the wrong hardware profile, override it explicitly:
 ./scripts/install-arch.sh --cpu intel --gpu nvidia
 ./scripts/install-arch.sh --cpu amd --gpu amd
 ./scripts/install-arch.sh --cpu none --gpu none
+./scripts/install-arch.sh --with-extras --cpu intel --gpu nvidia
 ```
 
 If you also want the tracked `greetd` config copied into `/etc`, use:
@@ -81,18 +98,30 @@ That copies `system/` into `/` with `sudo`. Review those files before using it.
 `scripts/install-arch.sh` does the following:
 
 1. Detects your CPU and GPU profile, unless you override it.
-2. Installs official packages from:
-   - `packages/official.txt`
+2. Installs the bare minimum package set from:
+   - `packages/official-minimal.txt`
+   - `packages/aur-minimal.txt`
+3. Adds the optional extras layer when you pass `--with-extras`:
+   - `packages/official-extra.txt`
+   - `packages/aur-extra.txt`
+4. Adds hardware-specific packages from:
    - `packages/cpu-intel.txt` or `packages/cpu-amd.txt`
    - `packages/gpu-amd.txt` or `packages/gpu-nvidia.txt`
-3. Bootstraps `paru` if it is missing, then installs AUR packages from `packages/aur.txt`.
-4. Runs `scripts/deploy-home.sh` to copy tracked user dotfiles into `$HOME`.
-5. Optionally copies tracked system files from `system/` into `/`.
-6. Tries to enable:
+5. Bootstraps `paru` if it is needed for selected AUR packages.
+6. Runs `scripts/deploy-home.sh` to copy tracked user dotfiles into `$HOME`.
+7. Optionally copies tracked system files from `system/` into `/`.
+8. Tries to enable:
    - `audio-sanity.service`
    - `hyprpolkitagent.service`
 
 For hybrid Intel + Nvidia systems, the installer automatically adds `vulkan-intel`.
+
+The config is intentionally tolerant of missing extras:
+
+- `spotatui` and `cava` only autostart if installed
+- the calendar button does nothing if `gsimplecal` is missing
+- the power button falls back gracefully if `wlogout` is missing
+- shell aliases only activate when tools like `lsd` or `micro` are installed
 
 ## Manual Deploy
 
@@ -133,10 +162,15 @@ The sync step keeps some files portable on purpose:
 
 ## Package Lists
 
-Base packages live in:
+Bare-minimum package lists live in:
 
-- `packages/official.txt`
-- `packages/aur.txt`
+- `packages/official-minimal.txt`
+- `packages/aur-minimal.txt`
+
+Nice-to-have extras live in:
+
+- `packages/official-extra.txt`
+- `packages/aur-extra.txt`
 
 Hardware-specific splits live in:
 
