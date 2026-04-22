@@ -17,7 +17,6 @@ dracut
 drawing
 dunst
 dysk
-efibootmgr
 fastfetch
 fd
 ffmpeg
@@ -56,7 +55,6 @@ man-db
 micro
 nmap
 openssh
-os-prober
 otf-font-awesome
 papirus-icon-theme
 pavucontrol
@@ -73,7 +71,6 @@ ripgrep
 rsync
 rust-analyzer
 rustup
-sddm
 shellcheck
 shfmt
 smartmontools

@@ -6,6 +6,13 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 HOME_DIR="${HOME}"
 DRY_RUN=0
 
+require_cmd() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    printf 'Missing required command: %s\n' "$1" >&2
+    exit 1
+  fi
+}
+
 usage() {
   cat <<'EOF'
 Usage: ./scripts/deploy-home.sh [--dry-run]
@@ -32,6 +39,10 @@ while [ "$#" -gt 0 ]; do
   esac
   shift
 done
+
+require_cmd cp
+require_cmd rsync
+require_cmd sed
 
 sync_into_home() {
   local src="$1"
@@ -103,7 +114,7 @@ if [ "$DRY_RUN" -eq 1 ]; then
 else
   printf '\nDotfiles deployed into %s\n' "$HOME_DIR"
   printf 'Next steps:\n'
-  printf '  1. Install packages from packages/official.txt and your CPU/GPU files.\n'
+  printf '  1. If you did not use scripts/install-arch.sh, install the packages you need from packages/.\n'
   printf '  2. Enable the user services you want (for example: systemctl --user enable --now audio-sanity.service hyprpolkitagent.service).\n'
   printf '  3. Rebuild waybar CSS with ~/.config/waybar/rebuild-style.sh if needed.\n'
   printf '  4. Reload Hyprland or log in again.\n'
