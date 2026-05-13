@@ -10,8 +10,8 @@
 #ext-workspaces button,
 #workspaces button {
   min-width: 0;
-  padding: 0 8px;
-  margin: 6px 2px;
+  padding: 0 10px;
+  margin: 6px 3px;
   border-radius: 10px;
   background: alpha(@panel_alt, 0.40);
   color: @accent2;
