@@ -53,7 +53,7 @@ tooltip .highlight {
 .modules-left {
   background: alpha(@panel, 0.78);
   border-radius: 16px;
-  padding: 0 10px;
+  padding: 0 6px;
   margin: 6px 10px 0 18px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.45);
 }
@@ -61,8 +61,9 @@ tooltip .highlight {
 #hyprland-workspaces button,
 #ext-workspaces button,
 #workspaces button {
-  padding: 0 14px;
-  margin: 6px 4px;
+  min-width: 0;
+  padding: 0 8px;
+  margin: 6px 2px;
   border-radius: 10px;
   background: alpha(@panel_alt, 0.40);
   color: @accent2;
