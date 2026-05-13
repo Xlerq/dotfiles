@@ -1,6 +1,6 @@
 {
   "modules-left": [
-    "hyprland/workspaces",
+    "ext/workspaces",
     "tray"
   ],
   "modules-center": [
@@ -14,13 +14,11 @@
     "custom/power"
   ],
   // ── LEWA – 5 workspace'ów
-  "hyprland/workspaces": {
+  "ext/workspaces": {
     "format": "{icon}",
     "on-click": "activate",
-    "sort-by-number": true,
-    "persistent-workspaces": {
-      "*": 5
-    },
+    "sort-by-name": true,
+    "ignore-hidden": false,
     "format-icons": {
       "active": "●",
       "default": "○"
