@@ -1,0 +1,11 @@
+hl.on("hyprland.start", function()
+    hl.exec_cmd("waybar")
+    hl.exec_cmd("hyprpaper")
+    hl.exec_cmd("dunst")
+    hl.exec_cmd("xdg-desktop-portal-hyprland")
+    hl.exec_cmd("hyprlauncher -d")
+    hl.exec_cmd("hypridle")
+
+    hl.exec_cmd("foot -a spotatui -T spotatui -e spotatui", { workspace = "1 silent" })
+    hl.exec_cmd("foot -a cava -T cava -e cava", { workspace = "1 silent" })
+end)
