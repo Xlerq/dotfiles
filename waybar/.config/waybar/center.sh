@@ -1,17 +1,23 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-trap 'kill $(jobs -p) 2>/dev/null; exit 0' SIGPIPE SIGTERM EXIT
+hour="$(date +"%H:%M")"
+today="$(date +'%A, %d %B %Y')"
+music="Nic nie gra"
 
-HOUR=$(date +"%H:%M")
+if command -v playerctl >/dev/null 2>&1; then
+    if raw_music="$(timeout 0.25s playerctl metadata --format '{{title}} - {{artist}}' 2>/dev/null)" && [[ -n "$raw_music" ]]; then
+        music="$(printf '%s' "$raw_music" | tr -d '\000-\037\177')"
+    fi
+fi
 
-# Muzyka – bardzo ostrożne czyszczenie i escaping
-RAW_MUSIC=$(playerctl metadata --format '{{title}} - {{artist}}' 2>/dev/null || echo "Nic nie gra")
-MUSIC=$(printf '%s' "$RAW_MUSIC" | tr -d '\000-\037\177' | sed 's/"/\\"/g; s/\\/\\\\/g; s/$/\\n/' | tr -d '\n')
+tooltip="<big>${today}</big>
 
-# Tooltip – tylko kalendarz + muzyka, bez cava
-TOOLTIP="<big>$(date +'%A, %d %B %Y')</big>\\n\\n"
-TOOLTIP+="<span foreground='#ffcc80' weight='bold'>♪ Teraz gra:</span>\\n${MUSIC:-Nic nie gra}"
+<span foreground='#ffcc80' weight='bold'>♪ Teraz gra:</span>
+${music}"
 
-printf '{"text": "%s", "tooltip": "%s", "class": "center"}\n' "$HOUR" "$TOOLTIP"
-
-exit 0
+jq -cn \
+    --arg text "$hour" \
+    --arg tooltip "$tooltip" \
+    --arg class "center" \
+    '{text: $text, tooltip: $tooltip, class: $class}'

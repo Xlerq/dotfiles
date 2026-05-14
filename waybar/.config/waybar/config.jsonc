@@ -33,6 +33,7 @@
     "exec": "~/.config/waybar/center.sh",
     "return-type": "json",
     "interval": 1,
+    "exec-on-event": false,
     "format": "{}",
     "tooltip": true,
     "on-click": "~/.config/waybar/toggle-calendar.sh"
