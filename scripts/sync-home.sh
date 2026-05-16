@@ -429,8 +429,8 @@ sync_user_package "$HOME_DIR/.config/zathura" "$REPO_ROOT/zathura/.config/zathur
 sync_lact_config
 
 cat > "$REPO_ROOT/hypr/.config/hypr/monitor.conf" <<'EOF'
-## Laptop panel: Dell 1080p 120 Hz.
-monitor = eDP-1, preferred, 0x0, 1
+## Generic fallback for any display.
+monitor = , preferred, auto, auto
 EOF
 
 cat > "$REPO_ROOT/hypr/.config/hypr/hyprpaper.conf" <<'EOF'

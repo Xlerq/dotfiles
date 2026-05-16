@@ -216,6 +216,27 @@ has_intel_graphics() {
   has_gpu_vendor "0x8086"
 }
 
+pacman_repo_enabled() {
+  local repo="$1"
+
+  awk -v repo="$repo" '
+    /^[[:space:]]*#/ { next }
+    $0 ~ "^[[:space:]]*\\[" repo "\\][[:space:]]*$" {
+      in_repo = 1
+      next
+    }
+    in_repo && /^[[:space:]]*\[/ {
+      in_repo = 0
+    }
+    in_repo && /^[[:space:]]*Include[[:space:]]*=/ {
+      found = 1
+    }
+    END {
+      exit(found ? 0 : 1)
+    }
+  ' /etc/pacman.conf
+}
+
 read_package_files() {
   awk '
     /^[[:space:]]*#/ { next }
@@ -278,6 +299,42 @@ build_aur_package_list() {
   fi
 
   read_package_files "${files[@]}" | awk '!seen[$0]++'
+}
+
+selected_official_packages_need_multilib() {
+  local package
+
+  for package in "${OFFICIAL_PACKAGES[@]}"; do
+    case "$package" in
+      lib32-* | steam)
+        return 0
+        ;;
+    esac
+  done
+
+  return 1
+}
+
+ensure_multilib_if_needed() {
+  if [ "$INSTALL_OFFICIAL" -eq 0 ]; then
+    return 0
+  fi
+
+  if ! selected_official_packages_need_multilib; then
+    return 0
+  fi
+
+  if pacman_repo_enabled multilib; then
+    return 0
+  fi
+
+  if [ "$DRY_RUN" -eq 1 ]; then
+    warn "Selected packages require the Arch [multilib] repository."
+    warn "Uncomment [multilib] and its Include line in /etc/pacman.conf before a real install."
+    return 0
+  fi
+
+  die "Selected packages require [multilib]. Uncomment [multilib] and its Include line in /etc/pacman.conf, then run sudo pacman -Syu."
 }
 
 bootstrap_paru() {
@@ -439,6 +496,7 @@ main() {
   mapfile -t AUR_PACKAGES < <(build_aur_package_list)
 
   print_plan
+  ensure_multilib_if_needed
   install_official_packages
   install_aur_packages
   deploy_home_dotfiles

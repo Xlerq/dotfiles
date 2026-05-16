@@ -3,8 +3,7 @@
 My personal Arch Linux + Hyprland setup.
 
 This repo tracks user dotfiles, split package lists, one optional `greetd` config, wallpaper assets, and helper scripts for syncing and deployment.
-
-The current hardware target is a Dell laptop with an Intel CPU/iGPU, NVIDIA dGPU, and a 1080p 120 Hz internal panel. The package installer still keeps AMD and NVIDIA profiles split so it can be overridden for other machines.
+It is intended to be portable across fresh Arch installs, with hardware-specific package splits selected by auto-detection or explicit flags.
 
 ## Preview
 
@@ -51,9 +50,10 @@ Important notes:
 - Run the installer as your normal user, not as `root`.
 - The script is meant for Arch Linux.
 - By default it installs the bare minimum package set, deploys dotfiles into `$HOME`, and tries to enable the tracked user services.
+- Existing dotfiles are backed up under `~/.dotfiles-backups/` before deployment overwrites them.
 - It does not touch system files unless you explicitly pass `--apply-system`.
 - It does not install the nice-to-have extras unless you explicitly pass `--with-extras`.
-- The full extras set includes Steam/lib32 packages, so enable the Arch `[multilib]` repository before using `--with-extras`.
+- The full extras set includes Steam/lib32 packages. The installer checks for the Arch `[multilib]` repository and prints a clear error if it is missing.
 
 If you want the full setup, including browsers, gaming tools, media tools, and dev extras:
 
@@ -88,7 +88,7 @@ To refresh the repo from the current machine state, run:
 
 The sync step keeps some files portable on purpose:
 
-- `hypr/.config/hypr/monitor.conf` is rewritten to the laptop panel layout.
+- `hypr/.config/hypr/monitor.conf` is rewritten to a generic preferred-resolution, auto-position monitor layout.
 - `hypr/.config/hypr/hyprpaper.conf` and `pupgui/.config/pupgui/config.ini` render `$HOME` as `@HOME@`.
 - On AMD GPU machines, `lact/.config/lact/ui.yaml` is synced without machine-specific GPU IDs and plot bindings.
 
@@ -111,6 +111,6 @@ Hardware-specific splits live in:
 - `packages/gpu-amd.txt`
 - `packages/gpu-nvidia.txt`
 
-The installer script is the preferred way to consume these lists because it handles detection and `paru` bootstrapping for you.
+The installer script is the preferred way to consume these lists because it handles hardware detection and `paru` bootstrapping for you.
 
-On Intel + NVIDIA hybrid laptops the installer also adds `vulkan-intel` and `nvidia-prime`; with `--with-extras` it adds the matching lib32 Vulkan/NVIDIA packages for Steam/Proton.
+On hybrid Intel + NVIDIA systems, the installer also adds `vulkan-intel` and `nvidia-prime`; with `--with-extras` it adds the matching lib32 Vulkan/NVIDIA packages for Steam/Proton.
