@@ -34,7 +34,6 @@ gsimplecal
 gst-plugin-pipewire
 imagemagick
 kolourpaint
-lact
 libpulse
 lm_sensors
 poppler

@@ -46,6 +46,11 @@ require_cmd sed
 
 sync_into_home() {
   local src="$1"
+
+  if [ ! -d "$src" ]; then
+    return 0
+  fi
+
   if [ "$DRY_RUN" -eq 1 ]; then
     rsync -an --exclude '.git/' --exclude '*.bak' "$src/" "$HOME_DIR/"
   else
@@ -84,6 +89,7 @@ copy_wallpaper() {
 }
 
 for package in \
+  autostart \
   bash \
   btop \
   cava \
@@ -91,13 +97,11 @@ for package in \
   foot \
   helix \
   hypr \
-  lact \
   micro \
   pupgui \
   rustfmt \
   spotatui \
   systemd-user \
-  tradingview \
   waybar \
   wlogout \
   yazi \

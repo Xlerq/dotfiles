@@ -64,6 +64,20 @@ trim_trailing_blank_lines() {
   mv "$tmp" "$file"
 }
 
+has_gpu_vendor() {
+  local wanted="$1"
+  local vendor_file vendor
+
+  while IFS= read -r vendor_file; do
+    vendor="$(tr '[:upper:]' '[:lower:]' < "$vendor_file")"
+    if [ "$vendor" = "$wanted" ]; then
+      return 0
+    fi
+  done < <(find /sys/class/drm -path '*/device/vendor' -type f 2>/dev/null | sort -u)
+
+  return 1
+}
+
 sync_user_package() {
   local src="$1"
   local dst="$2"
@@ -97,6 +111,11 @@ sync_systemd_user() {
 sync_lact_config() {
   local src="$HOME_DIR/.config/lact/ui.yaml"
   local dst="$REPO_ROOT/lact/.config/lact/ui.yaml"
+
+  if ! has_gpu_vendor "0x1002"; then
+    rm -rf "$REPO_ROOT/lact"
+    return 0
+  fi
 
   if [ ! -f "$src" ]; then
     return 0
@@ -379,7 +398,8 @@ EOF
 
 copy_file "$HOME_DIR/.bashrc" "$REPO_ROOT/bash/.bashrc"
 copy_file "$HOME_DIR/.bash_profile" "$REPO_ROOT/bash/.bash_profile"
-sync_file "$HOME_DIR/.config/tradingview-flags.conf" "$REPO_ROOT/tradingview/.config/tradingview-flags.conf"
+sync_file "$HOME_DIR/.config/autostart/blueman.desktop" "$REPO_ROOT/autostart/.config/autostart/blueman.desktop"
+sync_file "$HOME_DIR/.config/autostart/nm-applet.desktop" "$REPO_ROOT/autostart/.config/autostart/nm-applet.desktop"
 sync_user_package "$HOME_DIR/.config/btop" "$REPO_ROOT/btop/.config/btop"
 sync_user_package "$HOME_DIR/.config/cava" "$REPO_ROOT/cava/.config/cava"
 sync_user_package "$HOME_DIR/.config/fastfetch" "$REPO_ROOT/fastfetch/.config/fastfetch"
@@ -398,9 +418,8 @@ sync_user_package "$HOME_DIR/.config/zathura" "$REPO_ROOT/zathura/.config/zathur
 sync_lact_config
 
 cat > "$REPO_ROOT/hypr/.config/hypr/monitor.conf" <<'EOF'
-## Portable default: let Hyprland pick the active display automatically.
-## Override this locally per machine if you want an exact layout/refresh rate.
-monitor = , preferred, auto, 1
+## Laptop panel: Dell 1080p 120 Hz.
+monitor = eDP-1, preferred, 0x0, 1
 EOF
 
 cat > "$REPO_ROOT/hypr/.config/hypr/hyprpaper.conf" <<'EOF'
