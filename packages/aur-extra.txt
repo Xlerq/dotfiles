@@ -9,5 +9,4 @@ spotify
 tradingview
 ventoy-bin
 waybar-mpris-git
-wlogout
 zen-browser-bin

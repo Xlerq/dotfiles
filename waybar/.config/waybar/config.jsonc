@@ -48,7 +48,7 @@
   "custom/power": {
     "format": "⏻",
     "tooltip": false,
-    "on-click": "sh -lc 'command -v wlogout >/dev/null 2>&1 && exec wlogout -b 2 -c 18 -r 18 -L 640 -R 640 -T 300 -B 300 -n -P 0; command -v hyprlock >/dev/null 2>&1 && exec hyprlock; hyprctl dispatch exit'"
+    "on-click": "sh -lc 'command -v wlogout >/dev/null 2>&1 && exec wlogout -b 2 -c 18 -r 18 -L 640 -R 640 -T 300 -B 300 -n -P 0; notify-send \"wlogout is not installed\" \"Run: paru -S --needed wlogout\"'"
   },
   "pulseaudio": {
     "format": "{icon} {volume}%",
