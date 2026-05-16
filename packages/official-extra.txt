@@ -5,7 +5,6 @@ bind
 calc
 dmidecode
 dysk
-fastfetch
 fd
 fzf
 github-cli

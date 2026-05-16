@@ -430,7 +430,17 @@ sync_lact_config
 
 cat > "$REPO_ROOT/hypr/.config/hypr/monitor.conf" <<'EOF'
 ## Generic fallback for any display.
-monitor = , preferred, auto, auto
+monitor = , preferred, auto, 1
+EOF
+
+mkdir -p "$REPO_ROOT/hypr/.config/hypr/lua"
+cat > "$REPO_ROOT/hypr/.config/hypr/lua/monitor.lua" <<'EOF'
+hl.monitor({
+    output = "",
+    mode = "preferred",
+    position = "auto",
+    scale = "1",
+})
 EOF
 
 cat > "$REPO_ROOT/hypr/.config/hypr/hyprpaper.conf" <<'EOF'

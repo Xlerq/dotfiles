@@ -88,7 +88,7 @@ To refresh the repo from the current machine state, run:
 
 The sync step keeps some files portable on purpose:
 
-- `hypr/.config/hypr/monitor.conf` is rewritten to a generic preferred-resolution, auto-position monitor layout.
+- `hypr/.config/hypr/monitor.conf` and `hypr/.config/hypr/lua/monitor.lua` are rewritten to a generic preferred-resolution, auto-position monitor layout.
 - `hypr/.config/hypr/hyprpaper.conf` and `pupgui/.config/pupgui/config.ini` render `$HOME` as `@HOME@`.
 - On AMD GPU machines, `lact/.config/lact/ui.yaml` is synced without machine-specific GPU IDs and plot bindings.
 

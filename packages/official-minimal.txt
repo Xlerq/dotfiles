@@ -15,6 +15,7 @@ cantarell-fonts
 ddcutil
 dunst
 foot
+fastfetch
 greetd
 greetd-tuigreet
 helix
