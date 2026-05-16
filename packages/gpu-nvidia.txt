@@ -1,6 +1,5 @@
 egl-wayland
-lib32-nvidia-utils
 libva-nvidia-driver
-nvidia
+nvidia-open
 nvidia-settings
 nvidia-utils

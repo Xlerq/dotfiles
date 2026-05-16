@@ -157,7 +157,26 @@ detect_cpu_profile() {
 }
 
 gpu_vendor_files() {
-  find /sys/class/drm -path '*/device/vendor' -type f 2>/dev/null | sort -u
+  local device class_file vendor_file class
+
+  {
+    find /sys/class/drm -path '*/device/vendor' -type f 2>/dev/null
+
+    for device in /sys/bus/pci/devices/*; do
+      class_file="$device/class"
+      vendor_file="$device/vendor"
+
+      [ -f "$class_file" ] || continue
+      [ -f "$vendor_file" ] || continue
+
+      class="$(cat "$class_file")"
+      case "$class" in
+        0x03*)
+          printf '%s\n' "$vendor_file"
+          ;;
+      esac
+    done
+  } | sort -u
 }
 
 has_gpu_vendor() {
@@ -233,8 +252,19 @@ build_official_package_list() {
 
   {
     read_package_files "${files[@]}"
-    if [ "$GPU_PROFILE" = "nvidia" ] && has_intel_graphics; then
+    if has_intel_graphics; then
       printf '%s\n' "vulkan-intel"
+      if [ "$WITH_EXTRAS" -eq 1 ]; then
+        printf '%s\n' "lib32-vulkan-intel"
+      fi
+    fi
+
+    if [ "$GPU_PROFILE" = "nvidia" ] && has_intel_graphics; then
+      printf '%s\n' "nvidia-prime"
+    fi
+
+    if [ "$GPU_PROFILE" = "nvidia" ] && [ "$WITH_EXTRAS" -eq 1 ]; then
+      printf '%s\n' "lib32-nvidia-utils"
     fi
   } | awk '!seen[$0]++'
 }

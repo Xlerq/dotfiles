@@ -91,6 +91,10 @@ __xler_startup_fetch() {
 
 __xler_startup_fetch
 
+if [ -d "$HOME/.local/share/npm/bin" ]; then
+  export PATH="$HOME/.local/share/npm/bin:$PATH"
+fi
+
 ARCHLAND_CLR='\[\e[38;2;235;22;5m\]'
 RESET_CLR='\[\e[0m\]'
 

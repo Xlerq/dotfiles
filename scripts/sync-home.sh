@@ -216,25 +216,25 @@ set -euo pipefail
 
 STATE_FILE="/tmp/hypridle-monitor-brightness"
 
-get_ddc_brightness() {
-	ddcutil getvcp 10 --brief 2>/dev/null | sed -n 's/.*current value = *\([0-9]\+\).*/\1/p' | head -n1
-}
-
 get_backlight_brightness() {
 	brightnessctl get 2>/dev/null || true
 }
 
-CURRENT="$(get_ddc_brightness)"
-if [[ "${CURRENT:-}" =~ ^[0-9]+$ ]]; then
-	printf 'ddcutil:%s\n' "$CURRENT" >"$STATE_FILE"
-	ddcutil setvcp 10 1 >/dev/null 2>&1 || true
-	exit 0
-fi
+get_ddc_brightness() {
+	ddcutil getvcp 10 --brief 2>/dev/null | sed -n 's/.*current value = *\([0-9]\+\).*/\1/p' | head -n1
+}
 
 CURRENT="$(get_backlight_brightness)"
 if [[ "${CURRENT:-}" =~ ^[0-9]+$ ]]; then
 	printf 'brightnessctl:%s\n' "$CURRENT" >"$STATE_FILE"
 	brightnessctl set 5% >/dev/null 2>&1 || true
+	exit 0
+fi
+
+CURRENT="$(get_ddc_brightness)"
+if [[ "${CURRENT:-}" =~ ^[0-9]+$ ]]; then
+	printf 'ddcutil:%s\n' "$CURRENT" >"$STATE_FILE"
+	ddcutil setvcp 10 1 >/dev/null 2>&1 || true
 fi
 EOF
 
@@ -244,7 +244,7 @@ set -euo pipefail
 
 STATE_FILE="/tmp/hypridle-monitor-brightness"
 FALLBACK_BRIGHTNESS="30"
-BACKEND="ddcutil"
+BACKEND="brightnessctl"
 
 # mały delay, bo po resume monitor bywa jeszcze niegotowy
 sleep 2
@@ -272,6 +272,13 @@ brightnessctl)
 		rm -f "$STATE_FILE"
 		exit 0
 	fi
+	for _ in 1 2 3 4 5; do
+		if ddcutil setvcp 10 "$BRIGHTNESS" >/dev/null 2>&1; then
+			rm -f "$STATE_FILE"
+			exit 0
+		fi
+		sleep 1
+	done
 	;;
 *)
 	for _ in 1 2 3 4 5; do
@@ -281,6 +288,10 @@ brightnessctl)
 		fi
 		sleep 1
 	done
+	if brightnessctl set "$BRIGHTNESS" >/dev/null 2>&1; then
+		rm -f "$STATE_FILE"
+		exit 0
+	fi
 	;;
 esac
 
@@ -319,14 +330,14 @@ set_backlight_percent() {
 detect_backend() {
 	local ddc
 
-	ddc="$(get_ddc_brightness || true)"
-	if [[ "$ddc" =~ ^[0-9]+$ ]]; then
-		printf 'ddc\n'
+	if get_backlight_percent >/dev/null 2>&1; then
+		printf 'backlight\n'
 		return 0
 	fi
 
-	if get_backlight_percent >/dev/null 2>&1; then
-		printf 'backlight\n'
+	ddc="$(get_ddc_brightness || true)"
+	if [[ "$ddc" =~ ^[0-9]+$ ]]; then
+		printf 'ddc\n'
 		return 0
 	fi
 

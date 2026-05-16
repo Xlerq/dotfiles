@@ -29,14 +29,14 @@ set_backlight_percent() {
 detect_backend() {
 	local ddc
 
-	ddc="$(get_ddc_brightness || true)"
-	if [[ "$ddc" =~ ^[0-9]+$ ]]; then
-		printf 'ddc\n'
+	if get_backlight_percent >/dev/null 2>&1; then
+		printf 'backlight\n'
 		return 0
 	fi
 
-	if get_backlight_percent >/dev/null 2>&1; then
-		printf 'backlight\n'
+	ddc="$(get_ddc_brightness || true)"
+	if [[ "$ddc" =~ ^[0-9]+$ ]]; then
+		printf 'ddc\n'
 		return 0
 	fi
 
