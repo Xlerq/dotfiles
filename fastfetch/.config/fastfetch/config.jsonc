@@ -1,7 +1,11 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json",
   "logo": {
-    "source": "CachyOS_small",
+    "source": "arch_small",
+    "color": {
+      "1": "#c44f3b",
+      "2": "#c44f3b"
+    },
     "padding": {
       "top": 1,
       "right": 3

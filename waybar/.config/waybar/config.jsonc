@@ -40,15 +40,15 @@
   },
   // ── PRAWA – wifi + tray + power
   "network": {
-    "format-wifi": "{essid}",
-    "format-disconnected": "Brak",
+    "format-wifi": "󰤨 {essid}",
+    "format-disconnected": "󰤭 Brak",
     "tooltip-format": "{ifname} via {gwaddr}\n{ipaddr}",
     "tooltip": true
   },
   "custom/power": {
     "format": "⏻",
     "tooltip": false,
-    "on-click": "sh -lc 'command -v wlogout >/dev/null 2>&1 && exec wlogout -b 2 -c 18 -r 18 -L 640 -R 640 -T 300 -B 300 -n -P 0; notify-send \"wlogout is not installed\" \"Run: paru -S --needed wlogout\"'"
+    "on-click": "wlogout -b 2 -c 10 -r 10 -L 780 -R 780 -T 280 -B 280 -n -P 0"
   },
   "pulseaudio": {
     "format": "{icon} {volume}%",

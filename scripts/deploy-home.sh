@@ -53,6 +53,7 @@ require_cmd cp
 require_cmd date
 require_cmd find
 require_cmd rsync
+require_cmd rm
 require_cmd sed
 
 ensure_backup_dir() {
@@ -114,15 +115,30 @@ sync_into_home() {
   fi
 }
 
+remove_obsolete_file() {
+  local rel="$1"
+  local path="$HOME_DIR/$rel"
+
+  if [ ! -e "$path" ] && [ ! -L "$path" ]; then
+    return 0
+  fi
+
+  if [ "$DRY_RUN" -eq 1 ]; then
+    printf 'remove obsolete %s\n' "$path"
+  else
+    backup_existing_path "$rel"
+    rm -f -- "$path"
+  fi
+}
+
 render_template() {
   local src="$1"
   local dst="$2"
 
-  mkdir -p "$(dirname "$dst")"
-
   if [ "$DRY_RUN" -eq 1 ]; then
     printf 'render %s -> %s\n' "$src" "$dst"
   else
+    mkdir -p "$(dirname "$dst")"
     sed "s|@HOME@|$HOME_DIR|g" "$src" > "$dst"
   fi
 }
@@ -135,11 +151,10 @@ copy_wallpaper() {
     return 0
   fi
 
-  mkdir -p "$(dirname "$dst")"
-
   if [ "$DRY_RUN" -eq 1 ]; then
     printf 'copy %s -> %s\n' "$src" "$dst"
   else
+    mkdir -p "$(dirname "$dst")"
     backup_existing_path ".local/share/wallpapers/fire.png"
     cp "$src" "$dst"
   fi
@@ -154,6 +169,7 @@ for package in \
   foot \
   helix \
   hypr \
+  lact \
   micro \
   pupgui \
   rustfmt \
@@ -162,12 +178,26 @@ for package in \
   waybar \
   wlogout \
   yazi \
-  zathura; do
+  zathura \
+  zed; do
   sync_into_home "$REPO_ROOT/$package"
+done
+
+for obsolete_file in \
+  .config/autostart/blueman.desktop \
+  .config/autostart/nm-applet.desktop \
+  .config/hypr/env.conf \
+  .config/hypr/hyprland.conf \
+  .config/hypr/keys.conf \
+  .config/hypr/look_and_feel.conf \
+  .config/hypr/rules.conf \
+  .config/hypr/start_programs.conf; do
+  remove_obsolete_file "$obsolete_file"
 done
 
 render_template "$REPO_ROOT/hypr/.config/hypr/hyprpaper.conf" "$HOME_DIR/.config/hypr/hyprpaper.conf"
 render_template "$REPO_ROOT/pupgui/.config/pupgui/config.ini" "$HOME_DIR/.config/pupgui/config.ini"
+render_template "$REPO_ROOT/spotatui/.config/spotatui/config.yml" "$HOME_DIR/.config/spotatui/config.yml"
 copy_wallpaper
 
 if [ "$DRY_RUN" -eq 1 ]; then

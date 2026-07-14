@@ -20,12 +20,14 @@ It is intended to be portable across fresh Arch installs, with hardware-specific
 - Fastfetch
 - Yazi
 - Helix
+- Zed (settings; installed with `--with-extras`)
 - Micro
 - Cava
 - Wlogout
 - Zathura
 - Btop
 - Rustfmt
+- LACT portable UI defaults
 - PupGUI
 - Spotatui
 - Bash config
@@ -51,6 +53,7 @@ Important notes:
 - The script is meant for Arch Linux.
 - By default it installs the bare minimum package set, deploys dotfiles into `$HOME`, and tries to enable the tracked user services.
 - Existing dotfiles are backed up under `~/.dotfiles-backups/` before deployment overwrites them.
+- Known legacy Hyprland `.conf` files and obsolete tray autostarts are backed up, then removed during deployment.
 - It does not touch system files unless you explicitly pass `--apply-system`.
 - It does not install the nice-to-have extras unless you explicitly pass `--with-extras`.
 - The full extras set includes Steam/lib32 packages. The installer checks for the Arch `[multilib]` repository and prints a clear error if it is missing.
@@ -90,6 +93,9 @@ The sync step keeps some files portable on purpose:
 
 - `hypr/.config/hypr/monitor.conf` and `hypr/.config/hypr/lua/monitor.lua` are rewritten to a generic preferred-resolution, auto-position monitor layout.
 - `hypr/.config/hypr/hyprpaper.conf` and `pupgui/.config/pupgui/config.ini` render `$HOME` as `@HOME@`.
+- A machine-specific, single-connector Waybar `output` value is omitted.
+- Spotatui keeps only `config.yml`; secret-like fields are reset and local home paths are rendered as `@HOME@`.
+- Zed keeps only `.config/zed/settings.json`; runtime state from `.local/share/zed` is never synced.
 - On AMD GPU machines, `lact/.config/lact/ui.yaml` is synced without machine-specific GPU IDs and plot bindings.
 
 ## Package Lists

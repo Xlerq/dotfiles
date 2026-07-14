@@ -1,4 +1,5 @@
 # Core system
+adobe-source-code-pro-fonts
 alsa-utils
 base
 base-devel

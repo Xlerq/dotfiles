@@ -14,6 +14,18 @@ copy_file() {
   cp "$src" "$dst"
 }
 
+copy_file_if_present() {
+  local src="$1"
+  local dst="$2"
+
+  if [ ! -f "$src" ]; then
+    printf 'Skipping optional file: %s does not exist\n' "$src" >&2
+    return 0
+  fi
+
+  copy_file "$src" "$dst"
+}
+
 sync_file() {
   local src="$1"
   local dst="$2"
@@ -68,12 +80,13 @@ has_gpu_vendor() {
   local wanted="$1"
   local vendor_file vendor
 
-  while IFS= read -r vendor_file; do
+  for vendor_file in /sys/class/drm/card*/device/vendor; do
+    [ -r "$vendor_file" ] || continue
     vendor="$(tr '[:upper:]' '[:lower:]' < "$vendor_file")"
     if [ "$vendor" = "$wanted" ]; then
       return 0
     fi
-  done < <(find /sys/class/drm -path '*/device/vendor' -type f 2>/dev/null | sort -u)
+  done
 
   return 1
 }
@@ -105,6 +118,8 @@ sync_systemd_user() {
     --exclude 'pipewire-session-manager.service' \
     --exclude 'pulseaudio.service' \
     --exclude 'pulseaudio.socket' \
+    --exclude 'xdg-desktop-portal.service' \
+    --exclude 'xdg-desktop-portal.service.d/' \
     "$src/" "$dst/"
 }
 
@@ -113,7 +128,6 @@ sync_lact_config() {
   local dst="$REPO_ROOT/lact/.config/lact/ui.yaml"
 
   if ! has_gpu_vendor "0x1002"; then
-    rm -rf "$REPO_ROOT/lact"
     return 0
   fi
 
@@ -138,6 +152,23 @@ sync_lact_config() {
       print
     }
   ' "$src" > "$dst"
+}
+
+sync_hypr_config() {
+  local src="$HOME_DIR/.config/hypr"
+  local dst="$REPO_ROOT/hypr/.config/hypr"
+
+  if [ ! -d "$src" ]; then
+    return 0
+  fi
+
+  mkdir -p "$dst"
+  rsync -a --delete \
+    --delete-excluded \
+    --exclude '.git/' \
+    --exclude '*.bak' \
+    --exclude 'old_conf/' \
+    "$src/" "$dst/"
 }
 
 sync_foot_config() {
@@ -176,29 +207,108 @@ sync_micro_config() {
 }
 
 sync_spotatui_config() {
-  local src="$HOME_DIR/.config/spotatui"
-  local dst="$REPO_ROOT/spotatui/.config/spotatui"
+  local src="$HOME_DIR/.config/spotatui/config.yml"
+  local dst="$REPO_ROOT/spotatui/.config/spotatui/config.yml"
+  local tmp
+
+  if [ ! -f "$src" ]; then
+    return 0
+  fi
+
+  mkdir -p "$(dirname "$dst")"
+  tmp="$(mktemp)"
+
+  awk -v home="$HOME_DIR" '
+    function replace_literal(value, needle, replacement, position) {
+      while ((position = index(value, needle)) > 0) {
+        value = substr(value, 1, position - 1) replacement substr(value, position + length(needle))
+      }
+      return value
+    }
+
+    {
+      key = $0
+      sub(/:.*/, "", key)
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", key)
+
+      if (tolower(key) ~ /(token|password|secret|api[_-]?key|credential|private[_-]?key)/) {
+        sub(/:.*/, ": null")
+      }
+
+      $0 = replace_literal($0, home, "@HOME@")
+      if ($0 ~ /:[[:space:]]*@HOME@/) {
+        sub(/@HOME@[^[:space:]#]*/, "\"&\"")
+      }
+      print
+    }
+  ' "$src" > "$tmp"
+
+  mv "$tmp" "$dst"
+  chmod 0644 "$dst"
+}
+
+sync_zed_config() {
+  local src="$HOME_DIR/.config/zed/settings.json"
+  local dst="$REPO_ROOT/zed/.config/zed/settings.json"
+
+  if [ ! -f "$src" ]; then
+    printf 'Skipping Zed settings: %s does not exist\n' "$src" >&2
+    return 0
+  fi
+
+  copy_file "$src" "$dst"
+}
+
+sync_waybar_config() {
+  local src="$HOME_DIR/.config/waybar"
+  local dst="$REPO_ROOT/waybar/.config/waybar"
+  local config="$dst/config.jsonc"
+  local tmp
 
   if [ ! -d "$src" ]; then
     return 0
   fi
 
-  mkdir -p "$dst"
-  rsync -a --delete \
-    --delete-excluded \
-    --exclude '.git/' \
-    --exclude '*.bak' \
-    --exclude '.gitignore' \
-    --exclude 'client.yml' \
-    --exclude '.spotify_token_cache*.json' \
-    --exclude 'streaming_cache/' \
-    "$src/" "$dst/"
+  sync_dir "$src" "$dst"
+
+  if [ ! -f "$config" ]; then
+    return 0
+  fi
+
+  tmp="$(mktemp)"
+  awk '
+    /^[[:space:]]*\/\// {
+      comments = comments $0 ORS
+      next
+    }
+    /^[[:space:]]*"output"[[:space:]]*:[[:space:]]*"[^"]+"[[:space:]]*,?[[:space:]]*$/ {
+      comments = ""
+      next
+    }
+    {
+      printf "%s", comments
+      comments = ""
+      print
+    }
+    END {
+      printf "%s", comments
+    }
+  ' "$config" > "$tmp"
+
+  mv "$tmp" "$config"
+  chmod 0644 "$config"
 }
 
 sync_wallpaper_asset() {
+  local config="$HOME_DIR/.config/hypr/hyprpaper.conf"
   local wallpaper_source
+
+  if [ ! -f "$config" ]; then
+    return 0
+  fi
+
   wallpaper_source="$(
-    sed -n 's/^[[:space:]]*path = //p' "$HOME_DIR/.config/hypr/hyprpaper.conf" | head -n1
+    sed -n 's/^[[:space:]]*path = //p' "$config" | head -n1
   )"
 
   wallpaper_source="${wallpaper_source/#\~/$HOME_DIR}"
@@ -210,6 +320,10 @@ sync_wallpaper_asset() {
 }
 
 write_portable_brightness_scripts() {
+  mkdir -p \
+    "$REPO_ROOT/hypr/.config/hypr/scripts" \
+    "$REPO_ROOT/waybar/.config/waybar"
+
   cat > "$REPO_ROOT/hypr/.config/hypr/scripts/monitor_dim.sh" <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
@@ -407,8 +521,8 @@ EOF
     "$REPO_ROOT/waybar/.config/waybar/monitor-brightness.sh"
 }
 
-copy_file "$HOME_DIR/.bashrc" "$REPO_ROOT/bash/.bashrc"
-copy_file "$HOME_DIR/.bash_profile" "$REPO_ROOT/bash/.bash_profile"
+copy_file_if_present "$HOME_DIR/.bashrc" "$REPO_ROOT/bash/.bashrc"
+copy_file_if_present "$HOME_DIR/.bash_profile" "$REPO_ROOT/bash/.bash_profile"
 sync_file "$HOME_DIR/.config/autostart/blueman.desktop" "$REPO_ROOT/autostart/.config/autostart/blueman.desktop"
 sync_file "$HOME_DIR/.config/autostart/nm-applet.desktop" "$REPO_ROOT/autostart/.config/autostart/nm-applet.desktop"
 sync_user_package "$HOME_DIR/.config/btop" "$REPO_ROOT/btop/.config/btop"
@@ -416,16 +530,17 @@ sync_user_package "$HOME_DIR/.config/cava" "$REPO_ROOT/cava/.config/cava"
 sync_user_package "$HOME_DIR/.config/fastfetch" "$REPO_ROOT/fastfetch/.config/fastfetch"
 sync_foot_config
 sync_user_package "$HOME_DIR/.config/helix" "$REPO_ROOT/helix/.config/helix"
-sync_user_package "$HOME_DIR/.config/hypr" "$REPO_ROOT/hypr/.config/hypr"
+sync_hypr_config
 sync_micro_config
 sync_user_package "$HOME_DIR/.config/pupgui" "$REPO_ROOT/pupgui/.config/pupgui"
 sync_user_package "$HOME_DIR/.config/rustfmt" "$REPO_ROOT/rustfmt/.config/rustfmt"
 sync_spotatui_config
 sync_systemd_user
-sync_user_package "$HOME_DIR/.config/waybar" "$REPO_ROOT/waybar/.config/waybar"
+sync_waybar_config
 sync_user_package "$HOME_DIR/.config/wlogout" "$REPO_ROOT/wlogout/.config/wlogout"
 sync_user_package "$HOME_DIR/.config/yazi" "$REPO_ROOT/yazi/.config/yazi"
 sync_user_package "$HOME_DIR/.config/zathura" "$REPO_ROOT/zathura/.config/zathura"
+sync_zed_config
 sync_lact_config
 
 cat > "$REPO_ROOT/hypr/.config/hypr/monitor.conf" <<'EOF'
@@ -452,8 +567,10 @@ wallpaper {
 EOF
 
 write_portable_brightness_scripts
-render_home_placeholder "$HOME_DIR/.config/pupgui/config.ini" "$REPO_ROOT/pupgui/.config/pupgui/config.ini"
-trim_trailing_blank_lines "$REPO_ROOT/pupgui/.config/pupgui/config.ini"
+if [ -f "$HOME_DIR/.config/pupgui/config.ini" ]; then
+  render_home_placeholder "$HOME_DIR/.config/pupgui/config.ini" "$REPO_ROOT/pupgui/.config/pupgui/config.ini"
+  trim_trailing_blank_lines "$REPO_ROOT/pupgui/.config/pupgui/config.ini"
+fi
 sync_wallpaper_asset
 
 rm -rf "$REPO_ROOT/neofetch"

@@ -3,10 +3,11 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+alias grep='grep --color=auto'
+
 if command -v lsd >/dev/null 2>&1; then
   alias ls='lsd'
 fi
-alias grep='grep --color=auto'
 
 if command -v micro >/dev/null 2>&1; then
   alias nano='micro'
@@ -91,11 +92,23 @@ __xler_startup_fetch() {
 
 __xler_startup_fetch
 
-if [ -d "$HOME/.local/share/npm/bin" ]; then
-  export PATH="$HOME/.local/share/npm/bin:$PATH"
-fi
-
 ARCHLAND_CLR='\[\e[38;2;235;22;5m\]'
 RESET_CLR='\[\e[0m\]'
 
 PS1='\u@'"${ARCHLAND_CLR}"'\h'"${RESET_CLR}"' \w \$ '
+
+__xler_prepend_path() {
+  local dir="$1"
+
+  [[ -d "$dir" ]] || return
+  case ":$PATH:" in
+    *:"$dir":*) ;;
+    *) PATH="$dir:$PATH" ;;
+  esac
+}
+
+__xler_prepend_path "$HOME/.local/share/npm/bin"
+__xler_prepend_path "$HOME/.surrealdb"
+__xler_prepend_path "$HOME/.local/bin"
+unset -f __xler_prepend_path
+export PATH

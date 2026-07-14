@@ -1,5 +1,5 @@
 -- Hyprland Lua config.
--- Legacy .conf files are kept as a fallback while Hyprland still supports them.
+-- Lua modules are the source of truth; legacy .conf files are intentionally not deployed.
 
 require("lua.env")
 require("lua.monitor")

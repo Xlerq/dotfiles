@@ -1,6 +1,6 @@
 * {
   box-shadow: none;
-  font-family: "JetBrainsMono Nerd Font Mono", "Noto Sans Mono", monospace;
+  font-family: "Source Code Pro", "JetBrainsMono Nerd Font", monospace;
   transition: 140ms ease-out;
 }
 
@@ -17,17 +17,17 @@ button {
   border-color: rgba(242, 161, 93, 0.78);
   border-radius: 14px;
 
-  margin: 8px;
-  padding: 92px 18px 18px 18px;
+  margin: 10px;
+  padding: 50px 0 16px 0;
 
-  min-width: 160px;
-  min-height: 132px;
+  min-width: 110px;
+  min-height: 110px;
 
   background-repeat: no-repeat;
-  background-position: center 24px;
-  background-size: 72px;
+  background-position: center 70px;
+  background-size: 160px;
 
-  font-size: 20px;
+  font-size: 36px;
   font-weight: 700;
 }
 

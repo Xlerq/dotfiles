@@ -67,6 +67,12 @@ spotatui/.config/spotatui/client.yml
 spotatui/.config/spotatui/.spotify_token_cache*.json
 spotatui/.config/spotatui/streaming_cache/
 spotatui/.config/spotatui/.gitignore
+spotatui/.config/spotatui/history/
+spotatui/.config/spotatui/spotatui-recap.html
+
+# Zed runtime data belongs outside the tracked config package
+zed/.cache/
+zed/.local/
 
 # codex / local editor backups
 foot/.config/foot/*.bak.codex-*

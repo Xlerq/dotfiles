@@ -8,8 +8,8 @@ hl.window_rule({
     match = { class = "^(spotatui)$" },
     workspace = "1 silent",
     float = true,
-    size = "1267 850",
-    move = "9 58",
+    size = "1500 950",
+    move = "40 85",
 })
 
 hl.window_rule({
@@ -17,8 +17,8 @@ hl.window_rule({
     match = { class = "^(cava)$" },
     workspace = "1 silent",
     float = true,
-    size = "734 379",
-    move = "1170 677",
+    size = "1100 520",
+    move = "monitor_w-1100-40 monitor_h-520-70",
 })
 
 hl.window_rule({
