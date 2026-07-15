@@ -8,8 +8,8 @@ hl.window_rule({
     match = { class = "^(spotatui)$" },
     workspace = "1 silent",
     float = true,
-    size = "1500 950",
-    move = "40 85",
+    size = { "monitor_w*0.586", "monitor_h*0.66" },
+    move = { "monitor_w*0.016", "monitor_h*0.059" },
 })
 
 hl.window_rule({
@@ -17,8 +17,8 @@ hl.window_rule({
     match = { class = "^(cava)$" },
     workspace = "1 silent",
     float = true,
-    size = "1100 520",
-    move = "monitor_w-1100-40 monitor_h-520-70",
+    size = { "monitor_w*0.43", "monitor_h*0.36" },
+    move = { "monitor_w-window_w-40", "monitor_h-window_h-70" },
 })
 
 hl.window_rule({
@@ -43,6 +43,6 @@ hl.window_rule({
 hl.window_rule({
     name = "move-hyprland-run",
     match = { class = "hyprland-run" },
-    move = "20 monitor_h-120",
+    move = { 20, "monitor_h-120" },
     float = true,
 })

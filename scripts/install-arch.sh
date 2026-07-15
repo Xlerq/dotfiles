@@ -12,31 +12,37 @@ ENABLE_USER_SERVICES=1
 WITH_EXTRAS=0
 CPU_OVERRIDE=""
 GPU_OVERRIDE=""
+DEVICE_PROFILE="auto"
+DISPLAY_PROFILE="auto"
 
 usage() {
   cat <<'EOF'
-Usage: ./scripts/install-arch.sh [options]
+Usage: ./dotfiles install [options]
 
 Fresh-install helper for this Arch Linux dotfiles repo.
 Run it as your normal user, not as root.
+The direct ./scripts/install-arch.sh entry point remains available.
 
 Options:
   --dry-run             Print the actions without changing the system.
   --with-extras         Install nice-to-have packages in addition to the bare minimum.
   --cpu intel|amd|none  Override CPU package profile detection.
   --gpu amd|nvidia|none Override GPU package profile detection.
+  --device auto|NAME    Device profile; list names with: ./dotfiles profiles.
+  --display auto|NAME   Display profile; list names with: ./dotfiles profiles.
   --apply-system        Copy tracked files from system/ into / using sudo.
   --skip-official       Skip pacman package installation.
-  --skip-aur            Skip AUR package installation.
-  --skip-home           Skip deploy-home.sh.
-  --skip-user-services  Do not enable user services.
+  --skip-aur            Skip AUR packages (including the wlogout power menu).
+  --skip-home           Skip applying dotfiles to HOME.
+  --skip-user-services  Do not enable audio-sanity or hyprpolkitagent services.
   -h, --help            Show this help.
 
 Examples:
-  ./scripts/install-arch.sh --dry-run
-  ./scripts/install-arch.sh
-  ./scripts/install-arch.sh --with-extras
-  ./scripts/install-arch.sh --cpu intel --gpu nvidia --apply-system
+  ./dotfiles install --dry-run
+  ./dotfiles install
+  ./dotfiles install --with-extras
+  ./dotfiles install --device desktop --display desktop-dual
+  ./dotfiles install --cpu intel --gpu nvidia --apply-system
 EOF
 }
 
@@ -67,6 +73,19 @@ require_cmd() {
   if ! command -v "$1" >/dev/null 2>&1; then
     die "Missing required command: $1"
   fi
+}
+
+validate_dotfiles_profile() {
+  local axis="$1"
+  local name="$2"
+
+  [ "$name" = "auto" ] && return 0
+  case "$name" in
+    *[!A-Za-z0-9._-]* | "")
+      die "Invalid $axis profile: $name"
+      ;;
+  esac
+  [ -d "$REPO_ROOT/profiles/$axis/$name" ] || die "Unknown $axis profile: $name"
 }
 
 parse_args() {
@@ -101,6 +120,16 @@ parse_args() {
             die "Invalid GPU profile: $GPU_OVERRIDE"
             ;;
         esac
+        ;;
+      --device | --profile)
+        shift
+        [ "$#" -gt 0 ] || die "--device requires a value"
+        DEVICE_PROFILE="$1"
+        ;;
+      --display)
+        shift
+        [ "$#" -gt 0 ] || die "--display requires a value"
+        DISPLAY_PROFILE="$1"
         ;;
       --apply-system)
         APPLY_SYSTEM=1
@@ -344,19 +373,18 @@ bootstrap_paru() {
     return 0
   fi
 
-  require_cmd git
-  require_cmd makepkg
-
   info "paru is not installed; bootstrapping it from the AUR"
-  tmp_dir="$(mktemp -d)"
 
   if [ "$DRY_RUN" -eq 1 ]; then
-    printf '[dry-run] git clone %q %q\n' "https://aur.archlinux.org/paru.git" "$tmp_dir/paru"
-    printf '[dry-run] (cd %q && makepkg -si --needed)\n' "$tmp_dir/paru"
-    rm -rf "$tmp_dir"
+    printf '[dry-run] git clone %q <temporary-directory>/paru\n' "https://aur.archlinux.org/paru.git"
+    printf '[dry-run] (cd <temporary-directory>/paru && makepkg -si --needed)\n'
     return 0
   fi
 
+  require_cmd git
+  require_cmd makepkg
+
+  tmp_dir="$(mktemp -d)"
   git clone https://aur.archlinux.org/paru.git "$tmp_dir/paru"
   (
     cd "$tmp_dir/paru"
@@ -398,16 +426,35 @@ install_aur_packages() {
 }
 
 deploy_home_dotfiles() {
+  local args=(
+    apply
+    --device "$DEVICE_PROFILE"
+    --display "$DISPLAY_PROFILE"
+    --yes
+  )
+
   if [ "$DEPLOY_HOME" -eq 0 ]; then
     info "Skipping home dotfiles deployment"
     return 0
   fi
 
+  if ! command -v rsync >/dev/null 2>&1; then
+    if [ "$DRY_RUN" -eq 1 ]; then
+      warn "rsync is not installed yet; skipping the detailed HOME diff preview"
+      warn "The default real install includes rsync before this step"
+      printf '[dry-run] '
+      printf '%q ' "$REPO_ROOT/dotfiles" "${args[@]}" --dry-run
+      printf '\n'
+      return 0
+    fi
+    die "rsync is required to apply HOME dotfiles"
+  fi
+
   info "Deploying tracked user dotfiles into \$HOME"
   if [ "$DRY_RUN" -eq 1 ]; then
-    run "$REPO_ROOT/scripts/deploy-home.sh" --dry-run
+    "$REPO_ROOT/dotfiles" "${args[@]}" --dry-run
   else
-    run "$REPO_ROOT/scripts/deploy-home.sh"
+    "$REPO_ROOT/dotfiles" "${args[@]}"
   fi
 }
 
@@ -420,6 +467,10 @@ apply_system_configs() {
   if [ ! -d "$REPO_ROOT/system" ]; then
     warn "No tracked system directory found"
     return 0
+  fi
+
+  if [ "$DRY_RUN" -eq 0 ]; then
+    require_cmd rsync
   fi
 
   info "Copying tracked system files from system/ into /"
@@ -474,6 +525,8 @@ print_plan() {
   fi
   info "CPU profile: $CPU_PROFILE"
   info "GPU profile: $GPU_PROFILE"
+  info "Device profile: $DEVICE_PROFILE"
+  info "Display profile: $DISPLAY_PROFILE"
   info "Official packages: ${#OFFICIAL_PACKAGES[@]}"
   info "AUR packages: ${#AUR_PACKAGES[@]}"
   info "Apply tracked system files: $APPLY_SYSTEM"
@@ -481,13 +534,16 @@ print_plan() {
 
 main() {
   parse_args "$@"
+  validate_dotfiles_profile device "$DEVICE_PROFILE"
+  validate_dotfiles_profile display "$DISPLAY_PROFILE"
   ensure_arch
   ensure_regular_user
   require_cmd awk
-  require_cmd rsync
   require_cmd sed
-  require_cmd sudo
   require_cmd pacman
+  if [ "$INSTALL_OFFICIAL" -eq 1 ] || [ "$INSTALL_AUR" -eq 1 ] || [ "$APPLY_SYSTEM" -eq 1 ]; then
+    require_cmd sudo
+  fi
 
   CPU_PROFILE="$(detect_cpu_profile)"
   GPU_PROFILE="$(detect_gpu_profile)"

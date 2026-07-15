@@ -1,0 +1,9 @@
+{
+  "modules-right": [
+    "custom/brightness",
+    "pulseaudio",
+    "custom/sysinfo",
+    "network",
+    "custom/power"
+  ]
+}

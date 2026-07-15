@@ -1,122 +1,129 @@
 # Dotfiles
 
-My personal Arch Linux + Hyprland setup.
-
-This repo tracks user dotfiles, split package lists, one optional `greetd` config, wallpaper assets, and helper scripts for syncing and deployment.
-It is intended to be portable across fresh Arch installs, with hardware-specific package splits selected by auto-detection or explicit flags.
+Personal Arch Linux + Hyprland configuration with safe HOME backups and separate device/display profiles.
 
 ## Preview
 
-### Desktop
-![Hyprland desktop 1](assets/screenshots/hypr1.png)
-![Hyprland desktop 2](assets/screenshots/hypr2.png)
-![Hyprland desktop 3](assets/screenshots/hypr3.png)
+![Hyprland desktop](assets/screenshots/hypr1.png)
+![Hyprland dashboard](assets/screenshots/hypr2.png)
+![Hyprland applications](assets/screenshots/hypr3.png)
 
-## What Is In The Repo
-
-- Hyprland
-- Waybar
-- Foot
-- Fastfetch
-- Yazi
-- Helix
-- Zed (settings; installed with `--with-extras`)
-- Micro
-- Cava
-- Wlogout
-- Zathura
-- Btop
-- Rustfmt
-- LACT portable UI defaults
-- PupGUI
-- Spotatui
-- Bash config
-- User systemd services
-- Optional `greetd` config in `system/`
-- Package lists
-- Wallpaper and helper scripts
-
-## Quick Install
-
-If you want the simplest path on a fresh Arch install, use the installer script.
+## Quick Start
 
 ```bash
-git clone https://github.com/Xlerq/dotfiles.git
-cd dotfiles
-./scripts/install-arch.sh --dry-run
-./scripts/install-arch.sh
+git clone https://github.com/Xlerq/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+
+./dotfiles install --dry-run
+./dotfiles install
 ```
 
-Important notes:
+Prerequisite: an Arch Linux user account with working `sudo` access (`git` is needed for the clone). The default package step installs `rsync` before HOME deployment.
 
-- Run the installer as your normal user, not as `root`.
-- The script is meant for Arch Linux.
-- By default it installs the bare minimum package set, deploys dotfiles into `$HOME`, and tries to enable the tracked user services.
-- Existing dotfiles are backed up under `~/.dotfiles-backups/` before deployment overwrites them.
-- Known legacy Hyprland `.conf` files and obsolete tray autostarts are backed up, then removed during deployment.
-- It does not touch system files unless you explicitly pass `--apply-system`.
-- It does not install the nice-to-have extras unless you explicitly pass `--with-extras`.
-- The full extras set includes Steam/lib32 packages. The installer checks for the Arch `[multilib]` repository and prints a clear error if it is missing.
+On a fresh HOME, the default install uses the minimal package lists, detects CPU/GPU and laptop/desktop automatically, applies the safe `generic` display layout, and backs up replaced HOME files. A previously saved profile selection is reused.
 
-If you want the full setup, including browsers, gaming tools, media tools, and dev extras:
+The installer also enables `audio-sanity.service` (masks/stops PulseAudio and restarts PipeWire) and `hyprpolkitagent.service` when available. Use `--skip-user-services` to leave user services unchanged.
+
+For this repository's AOC 1440p + Samsung 1080p desktop layout:
 
 ```bash
-./scripts/install-arch.sh --with-extras
+./dotfiles install --device desktop --display desktop-dual
 ```
 
-If auto-detection guesses the wrong hardware profile, override it explicitly:
+Add `--with-extras` to install GUI applications, development tools, gaming packages, and Zed:
 
 ```bash
-./scripts/install-arch.sh --cpu intel --gpu nvidia
-./scripts/install-arch.sh --cpu amd --gpu amd
-./scripts/install-arch.sh --cpu none --gpu none
-./scripts/install-arch.sh --with-extras --cpu intel --gpu nvidia
+./dotfiles install --with-extras
 ```
 
-If you also want the tracked `greetd` config copied into `/etc`, use:
+## Everyday Use
+
+| Direction | Preview | Apply |
+|---|---|---|
+| Repository → HOME | `./dotfiles apply --dry-run` | `./dotfiles apply` |
+| HOME → repository | `./dotfiles capture --dry-run` | `./dotfiles capture` |
+
+A real `capture` requires a Git worktree and refuses to run when it is dirty; its dry-run only warns. Commit/stash existing changes first; `--force` is available for intentional exceptions. Capture updates the common files and only the selected device/display profiles, so pass explicit profile flags when capturing on another machine.
+
+Compatibility wrappers remain available:
 
 ```bash
-./scripts/install-arch.sh --apply-system
+./scripts/deploy-home.sh  # same as: ./dotfiles apply
+./scripts/sync-home.sh    # same as: ./dotfiles capture
 ```
 
-That copies `system/` into `/` with `sudo`. Review those files before using it.
-
-## Sync From Current Machine
-
-To refresh the repo from the current machine state, run:
+List the common tracked HOME components (profile overlays are listed separately by `profiles`):
 
 ```bash
-./scripts/sync-home.sh
+./dotfiles list
 ```
 
-The sync step keeps some files portable on purpose:
+## Profiles
 
-- `hypr/.config/hypr/monitor.conf` and `hypr/.config/hypr/lua/monitor.lua` are rewritten to a generic preferred-resolution, auto-position monitor layout.
-- `hypr/.config/hypr/hyprpaper.conf` and `pupgui/.config/pupgui/config.ini` render `$HOME` as `@HOME@`.
-- A machine-specific, single-connector Waybar `output` value is omitted.
-- Spotatui keeps only `config.yml`; secret-like fields are reset and local home paths are rendered as `@HOME@`.
-- Zed keeps only `.config/zed/settings.json`; runtime state from `.local/share/zed` is never synced.
-- On AMD GPU machines, `lact/.config/lact/ui.yaml` is synced without machine-specific GPU IDs and plot bindings.
+Profiles have two independent axes, applied in this order:
 
-## Package Lists
+```text
+common dotfiles → device profile → display profile
+```
 
-Bare-minimum package lists live in:
+Device profiles:
 
-- `packages/official-minimal.txt`
-- `packages/aur-minimal.txt`
+- `desktop`: enables the Spotatui/Cava dashboard (installed with `--with-extras`) and keeps the full Waybar status set.
+- `laptop`: skips the dashboard, adds a battery module, and avoids the continuously polled system-info module.
 
-Nice-to-have extras live in:
+Display profiles:
 
-- `packages/official-extra.txt`
-- `packages/aur-extra.txt`
+- `generic`: `preferred` resolution, automatic position and scale; safe for unknown displays and laptops.
+- `desktop-dual`: AOC `2560×1440@155` with Waybar plus Samsung `1920×1080@60` on the left; monitors are matched by description rather than unstable connector numbers.
 
-Hardware-specific splits live in:
+Choose profiles explicitly when needed:
 
-- `packages/cpu-intel.txt`
-- `packages/cpu-amd.txt`
-- `packages/gpu-amd.txt`
-- `packages/gpu-nvidia.txt`
+```bash
+./dotfiles apply --device laptop --display generic
+./dotfiles apply --device desktop --display desktop-dual
+```
 
-The installer script is the preferred way to consume these lists because it handles hardware detection and `paru` bootstrapping for you.
+The last applied selection is stored under `${XDG_STATE_HOME:-~/.local/state}/dotfiles/selection`, so later `apply` and `capture` commands do not need repeated flags. See the saved selection (or `auto` before the first apply) with:
 
-On hybrid Intel + NVIDIA systems, the installer also adds `vulkan-intel` and `nvidia-prime`; with `--with-extras` it adds the matching lib32 Vulkan/NVIDIA packages for Steam/Proton.
+```bash
+./dotfiles profiles
+```
+
+Dashboard windows and the power menu scale from the active monitor geometry, so a new resolution normally does not need another profile. Add a display profile only for a real layout that needs different outputs, scale, refresh rate, or monitor positions. Copy `profiles/display/generic/`, inspect identifiers with `hyprctl monitors all`, then edit its `monitor.lua` and Waybar `display.jsonc`. Hyprland expects `desc:MAKE MODEL SERIAL`; Waybar uses the same description without `desc:`. An empty Waybar object (`{}`) shows bars on all outputs, while `"output"` restricts it to one.
+
+## Safety
+
+- `--dry-run` does not modify HOME or the repository.
+- By default, real `apply` operations back up replaced/deleted HOME files under `~/.dotfiles-backups/<timestamp>/`.
+- Only explicitly listed legacy files are removed; deployment never performs a global `--delete` against HOME.
+- `capture` first builds a temporary snapshot, excludes ignored/private filenames, checks changed text files for secret-like assignments, and only then updates the repository. It never deletes repository files automatically; a failed update restores the original managed files and keeps a recovery snapshot.
+- Spotatui secret-like fields are reset during capture, its local file remains private (`0600`), HOME paths become `@HOME@`, and Zed runtime data is never captured.
+- Machine-specific LACT GPU identifiers and transient systemd/Micro state are filtered.
+
+## Installer Options
+
+The installer remains Arch-specific and never applies `system/` unless requested:
+
+```bash
+./dotfiles install --with-extras
+./dotfiles install --cpu intel --gpu nvidia
+./dotfiles install --apply-system
+./dotfiles install --help
+```
+
+On a fresh system, `--skip-aur` also omits `wlogout`, so the Waybar power button will not open its menu.
+
+Package sets live in `packages/`:
+
+- `official-minimal.txt` / `aur-minimal.txt`
+- `official-extra.txt` / `aur-extra.txt`
+- CPU/GPU-specific lists
+
+## Repository Layout
+
+- `manifest/home-items.tsv` — common HOME mappings and capture policies.
+- `profiles/device/` — laptop/desktop behavior overlays.
+- `profiles/display/` — monitor layout overlays.
+- application directories (`hypr/`, `waybar/`, `zed/`, etc.) — common configuration.
+- `scripts/dotfiles.sh` — implementation behind the public `./dotfiles` command.
+- `scripts/install-arch.sh` — package/system installer.

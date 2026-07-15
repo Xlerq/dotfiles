@@ -1,17 +1,14 @@
 {
+  "include": [
+    "device.jsonc",
+    "display.jsonc"
+  ],
   "modules-left": [
     "ext/workspaces",
     "tray"
   ],
   "modules-center": [
     "custom/center"
-  ],
-  "modules-right": [
-    "custom/brightness",
-    "pulseaudio",
-    "custom/sysinfo",
-    "network",
-    "custom/power"
   ],
   // ── LEWA – 5 workspace'ów
   "ext/workspaces": {
@@ -48,7 +45,7 @@
   "custom/power": {
     "format": "⏻",
     "tooltip": false,
-    "on-click": "wlogout -b 2 -c 10 -r 10 -L 780 -R 780 -T 280 -B 280 -n -P 0"
+    "on-click": "~/.config/waybar/open-wlogout.sh"
   },
   "pulseaudio": {
     "format": "{icon} {volume}%",

@@ -1,0 +1,21 @@
+# id|repository path|HOME path|capture handler
+bashrc|bash/.bashrc|.bashrc|optional-file
+bash-profile|bash/.bash_profile|.bash_profile|optional-file
+btop|btop/.config/btop|.config/btop|mirror
+cava|cava/.config/cava|.config/cava|mirror
+fastfetch|fastfetch/.config/fastfetch|.config/fastfetch|mirror
+foot|foot/.config/foot|.config/foot|foot
+helix|helix/.config/helix|.config/helix|mirror
+hypr|hypr/.config/hypr|.config/hypr|hypr
+lact|lact/.config/lact/ui.yaml|.config/lact/ui.yaml|lact
+micro|micro/.config/micro|.config/micro|micro
+pupgui|pupgui/.config/pupgui/config.ini|.config/pupgui/config.ini|template
+rustfmt|rustfmt/.config/rustfmt|.config/rustfmt|mirror
+spotatui|spotatui/.config/spotatui/config.yml|.config/spotatui/config.yml|spotatui
+systemd-user|systemd-user/.config/systemd/user|.config/systemd/user|systemd
+waybar|waybar/.config/waybar|.config/waybar|waybar
+wlogout|wlogout/.config/wlogout|.config/wlogout|mirror
+yazi|yazi/.config/yazi|.config/yazi|mirror
+zathura|zathura/.config/zathura|.config/zathura|mirror
+zed|zed/.config/zed/settings.json|.config/zed/settings.json|optional-file
+wallpaper|assets/wallpapers/fire.png|.local/share/wallpapers/fire.png|wallpaper

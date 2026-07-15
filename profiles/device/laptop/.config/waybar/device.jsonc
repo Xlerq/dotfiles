@@ -1,0 +1,17 @@
+{
+  "modules-right": [
+    "custom/brightness",
+    "battery",
+    "pulseaudio",
+    "network",
+    "custom/power"
+  ],
+  "battery": {
+    "format": "󰁹 {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "states": {
+      "warning": 25,
+      "critical": 10
+    }
+  }
+}
