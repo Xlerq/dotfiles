@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-STATE_FILE="/tmp/hypridle-monitor-brightness"
+STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/hypridle-monitor-brightness-$UID"
+umask 077
+
+if [ -s "$STATE_FILE" ]; then
+	exit 0
+fi
 
 get_backlight_brightness() {
 	brightnessctl get 2>/dev/null || true

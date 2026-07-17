@@ -1,4 +1,4 @@
 { "label" : "lock",     "action" : "pidof hyprlock || hyprlock", "text" : "Lock",     "keybind" : "l" }
-{ "label" : "logout",   "action" : "hyprctl dispatch exit",      "text" : "Logout",   "keybind" : "e" }
+{ "label" : "logout",   "action" : "sh -lc 'if uwsm check is-active; then exec uwsm stop; else exec hyprctl dispatch exit; fi'", "text" : "Logout", "keybind" : "e" }
 { "label" : "reboot",   "action" : "systemctl reboot",           "text" : "Reboot",   "keybind" : "r" }
 { "label" : "shutdown", "action" : "systemctl poweroff",         "text" : "Shutdown", "keybind" : "s" }

@@ -303,6 +303,7 @@ build_official_package_list() {
   {
     read_package_files "${files[@]}"
     if has_intel_graphics; then
+      printf '%s\n' "intel-media-driver"
       printf '%s\n' "vulkan-intel"
       if [ "$WITH_EXTRAS" -eq 1 ]; then
         printf '%s\n' "lib32-vulkan-intel"
@@ -315,6 +316,10 @@ build_official_package_list() {
 
     if [ "$GPU_PROFILE" = "nvidia" ] && [ "$WITH_EXTRAS" -eq 1 ]; then
       printf '%s\n' "lib32-nvidia-utils"
+    fi
+
+    if [ "$GPU_PROFILE" = "amd" ] && [ "$WITH_EXTRAS" -eq 1 ]; then
+      printf '%s\n' "lib32-vulkan-radeon"
     fi
   } | awk '!seen[$0]++'
 }

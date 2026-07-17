@@ -2,10 +2,8 @@ brave-bin
 debtap
 joplin-bin
 plymouth-theme-cuts-alt-git
-prismlauncher-offline-bin
 protonup-qt-bin
 spotatui-bin
-spotify
 tradingview
 ventoy-bin
 waybar-mpris-git

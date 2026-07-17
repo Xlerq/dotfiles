@@ -1,36 +1,32 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-STATE_FILE="/tmp/hypridle-monitor-brightness"
-FALLBACK_BRIGHTNESS="30"
-BACKEND="brightnessctl"
+STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/hypridle-monitor-brightness-$UID"
 
 # mały delay, bo po resume monitor bywa jeszcze niegotowy
 sleep 2
 
-if [ -f "$STATE_FILE" ]; then
-	STATE="$(cat "$STATE_FILE" 2>/dev/null || true)"
-else
-	STATE=""
-fi
+[ -f "$STATE_FILE" ] || exit 0
+STATE="$(<"$STATE_FILE")"
+BACKEND="${STATE%%:*}"
+BRIGHTNESS="${STATE#*:}"
 
-if [[ "$STATE" == *:* ]]; then
-	BACKEND="${STATE%%:*}"
-	BRIGHTNESS="${STATE#*:}"
-else
-	BRIGHTNESS="$FALLBACK_BRIGHTNESS"
-fi
-
-if ! [[ "${BRIGHTNESS:-}" =~ ^[0-9]+$ ]]; then
-	BRIGHTNESS="$FALLBACK_BRIGHTNESS"
+if [[ "$STATE" != *:* ]] || ! [[ "$BRIGHTNESS" =~ ^[0-9]+$ ]]; then
+	rm -f "$STATE_FILE"
+	exit 0
 fi
 
 case "$BACKEND" in
 brightnessctl)
-	if brightnessctl set "$BRIGHTNESS" >/dev/null 2>&1; then
-		rm -f "$STATE_FILE"
-		exit 0
-	fi
+	for _ in 1 2 3 4 5; do
+		if brightnessctl set "$BRIGHTNESS" >/dev/null 2>&1; then
+			rm -f "$STATE_FILE"
+			exit 0
+		fi
+		sleep 1
+	done
+	;;
+ddcutil)
 	for _ in 1 2 3 4 5; do
 		if ddcutil setvcp 10 "$BRIGHTNESS" >/dev/null 2>&1; then
 			rm -f "$STATE_FILE"
@@ -40,17 +36,8 @@ brightnessctl)
 	done
 	;;
 *)
-	for _ in 1 2 3 4 5; do
-		if ddcutil setvcp 10 "$BRIGHTNESS" >/dev/null 2>&1; then
-			rm -f "$STATE_FILE"
-			exit 0
-		fi
-		sleep 1
-	done
-	if brightnessctl set "$BRIGHTNESS" >/dev/null 2>&1; then
-		rm -f "$STATE_FILE"
-		exit 0
-	fi
+	rm -f "$STATE_FILE"
+	exit 0
 	;;
 esac
 

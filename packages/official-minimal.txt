@@ -4,6 +4,7 @@ alsa-utils
 base
 base-devel
 git
+jq
 linux
 linux-firmware
 rsync
@@ -48,6 +49,7 @@ uwsm
 waybar
 wireplumber
 xdg-desktop-portal-hyprland
+xdg-desktop-portal-gtk
 xdg-utils
 yazi
 zathura

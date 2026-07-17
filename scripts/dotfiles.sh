@@ -108,6 +108,39 @@ detect_device_profile() {
   printf 'desktop\n'
 }
 
+gpu_vendor_files() {
+  local device class_file vendor_file class
+
+  {
+    find /sys/class/drm -path '*/device/vendor' -type f 2>/dev/null
+
+    for device in /sys/bus/pci/devices/*; do
+      class_file="$device/class"
+      vendor_file="$device/vendor"
+      [ -f "$class_file" ] && [ -f "$vendor_file" ] || continue
+
+      class="$(cat "$class_file")"
+      case "$class" in
+        0x03*) printf '%s\n' "$vendor_file" ;;
+      esac
+    done
+  } | sort -u
+}
+
+has_gpu_vendor() {
+  local wanted="$1"
+  local vendor_file vendor
+
+  while IFS= read -r vendor_file; do
+    vendor="$(tr '[:upper:]' '[:lower:]' < "$vendor_file")"
+    if [ "$vendor" = "$wanted" ]; then
+      return 0
+    fi
+  done < <(gpu_vendor_files)
+
+  return 1
+}
+
 validate_profile() {
   local axis="$1"
   local name="$2"
@@ -194,6 +227,7 @@ ensure_backup_dir() {
       die "Backup root must be a real directory: $root"
     fi
     mkdir -p "$root"
+    chmod 0700 "$root"
     base="$root/$(date +%Y%m%d-%H%M%S)"
     BACKUP_DIR="$base"
     while [ -e "$BACKUP_DIR" ] || [ -L "$BACKUP_DIR" ]; do
@@ -201,6 +235,7 @@ ensure_backup_dir() {
       BACKUP_DIR="$base-$suffix"
     done
     mkdir -p "$BACKUP_DIR"
+    chmod 0700 "$BACKUP_DIR"
   fi
 }
 
@@ -588,7 +623,14 @@ apply_manifest() {
       mirror | foot | micro | systemd)
         apply_directory "$src" "$home_rel"
         ;;
-      optional-file | lact | wallpaper)
+      lact)
+        if has_gpu_vendor "0x1002"; then
+          apply_file "$src" "$home_rel"
+        else
+          info "Skipping LACT config on non-AMD graphics"
+        fi
+        ;;
+      optional-file | wallpaper)
         apply_file "$src" "$home_rel"
         ;;
       *)
@@ -861,6 +903,7 @@ capture_manifest() {
           --exclude 'start_programs.conf' \
           --exclude 'lua/device.lua' \
           --exclude 'lua/monitor.lua'
+        capture_template "$src/hyprpaper.conf" "$dst/hyprpaper.conf"
         ;;
       systemd)
         capture_directory "$src" "$dst" \
@@ -888,7 +931,11 @@ capture_manifest() {
         capture_spotatui "$src" "$dst"
         ;;
       lact)
-        capture_lact "$src" "$dst"
+        if has_gpu_vendor "0x1002"; then
+          capture_lact "$src" "$dst"
+        else
+          info "Skipping LACT config on non-AMD graphics"
+        fi
         ;;
       wallpaper)
         capture_wallpaper "$dst"

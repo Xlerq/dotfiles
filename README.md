@@ -45,6 +45,8 @@ Add `--with-extras` to install GUI applications, development tools, gaming packa
 
 A real `capture` requires a Git worktree and refuses to run when it is dirty; its dry-run only warns. Commit/stash existing changes first; `--force` is available for intentional exceptions. Capture updates the common files and only the selected device/display profiles, so pass explicit profile flags when capturing on another machine.
 
+After applying inside a running Hyprland session, log out and back in so UWSM, cursor variables, startup programs, and Waybar all use the new configuration.
+
 Compatibility wrappers remain available:
 
 ```bash
@@ -74,12 +76,14 @@ Device profiles:
 Display profiles:
 
 - `generic`: `preferred` resolution, automatic position and scale; safe for unknown displays and laptops.
+- `laptop-1080p`: `preferred` resolution with native `1x` scale for 1080p laptop panels.
 - `desktop-dual`: AOC `2560×1440@155` with Waybar plus Samsung `1920×1080@60` on the left; monitors are matched by description rather than unstable connector numbers.
 
 Choose profiles explicitly when needed:
 
 ```bash
 ./dotfiles apply --device laptop --display generic
+./dotfiles apply --device laptop --display laptop-1080p
 ./dotfiles apply --device desktop --display desktop-dual
 ```
 
