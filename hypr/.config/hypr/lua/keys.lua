@@ -3,6 +3,23 @@ local terminal = "foot"
 local fileManager = "yazi"
 local menu = "hyprlauncher"
 
+-- Three-finger touchpad gestures.
+hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
+hl.gesture({
+    fingers = 3,
+    direction = "up",
+    action = function()
+        hl.exec_cmd(menu)
+    end,
+})
+hl.gesture({
+    fingers = 3,
+    direction = "down",
+    action = function()
+        hl.exec_cmd("$HOME/.config/hypr/scripts/close_hyprlauncher.sh")
+    end,
+})
+
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + C", hl.dsp.window.close())
 hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("sh -lc 'if uwsm check is-active; then exec uwsm stop; else exec hyprctl dispatch exit; fi'"))
