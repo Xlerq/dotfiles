@@ -611,6 +611,7 @@ apply_manifest() {
       hypr)
         apply_directory "$src" "$home_rel" \
           --exclude 'hyprpaper.conf' \
+          --exclude 'hypridle.conf' \
           --exclude 'lua/device.lua' \
           --exclude 'lua/monitor.lua'
         apply_rendered_file "$src/hyprpaper.conf" "$home_rel/hyprpaper.conf"
@@ -894,6 +895,7 @@ capture_manifest() {
         capture_directory "$src" "$dst" \
           --exclude 'old_conf/' \
           --exclude 'hyprpaper.conf' \
+          --exclude 'hypridle.conf' \
           --exclude 'env.conf' \
           --exclude 'hyprland.conf' \
           --exclude 'keys.conf' \

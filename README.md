@@ -70,8 +70,8 @@ common dotfiles → device profile → display profile
 
 Device profiles:
 
-- `desktop`: enables the Spotatui/Cava dashboard (installed with `--with-extras`) and keeps the full Waybar status set.
-- `laptop`: skips the dashboard, adds a battery module, and avoids the continuously polled system-info module.
+- `desktop`: enables the Spotatui/Cava dashboard (installed with `--with-extras`), keeps the full Waybar status set, and turns displays off without suspending the PC automatically.
+- `laptop`: skips the dashboard, adds a battery module, avoids the continuously polled system-info module, and suspends after 30 minutes of inactivity.
 
 Display profiles:
 
